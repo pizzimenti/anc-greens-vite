@@ -1,29 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { fetchPlantings } from './services/api';
+import React, { useEffect, useState } from "react";
+import { fetchPlantings } from "./services/api";
+import logo from './logo.svg';
+
+import "./App.css";
 
 function App() {
-  const [plantings, setPlantings] = useState([]);
+  const [plantingsData, setPlantingsData] = useState([]);
+
+  const fetchData = async () => {
+    const data = await fetchPlantings();
+    setPlantingsData(data);
+  };
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await fetchPlantings();
-      console.log('API response:', data); // Add this line to log the response
-      setPlantings(data);
-    }
-    
     fetchData();
   }, []);
 
   return (
-    <div>
-      <h1>Plantings Data</h1>
-      <ul>
-        {plantings.map((planting: any, index: number) => (
-          <li key={index}>{planting.planting} - {planting.variety}</li>
-        ))}
-      </ul>
+    <div className="App">
+      <div className="header">
+        <img src={logo} alt="Logo" className="logo" />
+        <h2>Plantings Data</h2>
+      </div>
+      {plantingsData.map((planting: any, index: number) => (
+        <div key={index}>{JSON.stringify(planting)}</div>
+      ))}
     </div>
   );
+  
 }
 
 export default App;
