@@ -16,18 +16,34 @@ function App() {
     fetchData();
   }, []);
 
+  const headers = plantingsData.length > 0 ? Object.keys(plantingsData[0]) : [];
+
   return (
     <div className="App">
       <div className="header">
         <img src={logo} alt="Logo" className="logo" />
         <h2>Plantings Data</h2>
       </div>
-      {plantingsData.map((planting: any, index: number) => (
-        <div key={index}>{JSON.stringify(planting)}</div>
-      ))}
+      <table className="plantings-table">
+        <thead>
+          <tr>
+            {headers.map((header, index) => (
+              <th key={index}>{header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {plantingsData.map((planting: any, index: number) => (
+            <tr key={index}>
+              {headers.map((header, headerIndex) => (
+                <td key={headerIndex}>{planting[header]}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-  
 }
 
 export default App;
