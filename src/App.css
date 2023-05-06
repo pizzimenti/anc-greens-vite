@@ -1,37 +1,39 @@
 .App {
   text-align: center;
+  background-color: #1a431c;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  font-family: Arial, sans-serif;
 }
 
 .header {
-  width: 66.66%;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logo {
-  max-width: 100%;
-  height: auto;
+  width: 227px;
 }
 
-h2 {
-  margin-top: 0;
-}
-
-/* Add these styles to your existing App.css */
 .plantings-table {
-  width: 66.66%;
-  margin: 0 auto;
+  width: 66%;
   border-collapse: collapse;
-  table-layout: auto;
 }
 
 .plantings-table th,
 .plantings-table td {
-  border: 1px solid #ddd;
+  border: 1px solid #ffffff;
   padding: 8px;
   text-align: left;
 }
 
 .plantings-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+  background-color: #3c6e3e;
+  color: #ffffff;
 }

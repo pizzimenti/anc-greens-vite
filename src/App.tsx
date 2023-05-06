@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchPlantings } from "./services/api";
 import logo from './logo.svg';
+import { formatDate } from "./services/dateUtils";
 
 import "./App.css";
 
@@ -17,6 +18,17 @@ function App() {
   }, []);
 
   const headers = plantingsData.length > 0 ? Object.keys(plantingsData[0]) : [];
+
+  const dateColumns = [
+    "seedDate",
+    "actualSeedDate",
+    "trayDate",
+    "actualTrayDate",
+    "t1Date",
+    "t2Date",
+    "t3Date",
+    "harvestDate",
+  ];
 
   return (
     <div className="App">
@@ -36,7 +48,9 @@ function App() {
           {plantingsData.map((planting: any, index: number) => (
             <tr key={index}>
               {headers.map((header, headerIndex) => (
-                <td key={headerIndex}>{planting[header]}</td>
+                <td key={headerIndex}>
+                  {dateColumns.includes(header) ? formatDate(planting[header]) : planting[header]}
+                </td>
               ))}
             </tr>
           ))}
