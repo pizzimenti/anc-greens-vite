@@ -8,17 +8,17 @@ export function formatDate(dateString: string | null): string {
     timeZone: "America/Anchorage",
     weekday: "short",
     month: "numeric",
-    day: "2-digit",
+    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   };
 
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
-  const time = formattedDate.split(" ")[2];
+  const timePart = formattedDate.split(", ")[2];
 
-  if (time === "00:00") {
-    return formattedDate.split(" ").slice(0, 2).join(" ");
+  if (timePart === "12:00 AM") {
+    return formattedDate.split(", ").slice(0, 2).join(", ");
   } else {
-    return formattedDate;
+    return formattedDate.replace(" ", "").replace("AM", "am").replace("PM", "pm");
   }
 }
