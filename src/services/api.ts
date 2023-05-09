@@ -1,3 +1,4 @@
+// Path: src/pages/Plantings.tsx
 const API_URL = 
 'https://script.google.com/macros/s/AKfycbxY6NxQvv_LVvaQdMK4nSqcMVM4cpHLxidhvbD4NRPT6dzDyy10HmImaXB-GG8EosLKlg/exec'
 
