@@ -1,5 +1,3 @@
-// path: src/App.tsx
-
 import React, { useEffect, useState } from "react";
 import { fetchPlantings } from "./services/api";
 import logo from './logo.svg';
@@ -12,12 +10,26 @@ function App() {
 
   const fetchData = async () => {
     const data = await fetchPlantings();
-    setPlantingsData(data);
+    const filteredData = filterByToday(data);
+    setPlantingsData(filteredData);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  const filterByToday = (data: any[]) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return data.filter(item => {
+      return ["seedDate", "actualSeedDate", "trayDate", "actualTrayDate", "t1Date", "t2Date", "t3Date", "harvestDate"].some(dateField => {
+        const itemDate = new Date(item[dateField]);
+        itemDate.setHours(0, 0, 0, 0);
+        return +itemDate === +today;
+      });
+    });
+  };
 
   const headers = plantingsData.length > 0 ? Object.keys(plantingsData[0]) : [];
 

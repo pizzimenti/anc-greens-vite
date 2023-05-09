@@ -1,4 +1,4 @@
-// playwright.config.ts
+// path: src/e2e-tests/playwright.config.ts
 import { PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
