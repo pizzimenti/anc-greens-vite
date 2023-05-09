@@ -1,3 +1,5 @@
+// path: src/App.tsx
+
 import React, { useEffect, useState } from "react";
 import { fetchPlantings } from "./services/api";
 import logo from './logo.svg';
