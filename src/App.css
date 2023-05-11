@@ -1,40 +1,51 @@
 /* path: src/App.css */
+
+/* The .App class applies styles to the root container of the app */
 .App {
-  text-align: center;
-  background-color: #1a431c;
-  color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  font-family: Arial, sans-serif;
+  text-align: center;         /* Centers text horizontally */
+  background-color: #1a431c;  /* Sets the background color of the app */
+  color: #ffffff;             /* Sets the text color of the app */
+  min-height: 100vh;          /* Sets the minimum height of the app to be the full height of the viewport */
+  display: flex;              /* Enables flexbox layout for the app's children */
+  flex-direction: column;     /* Stacks the app's children vertically */
+  align-items: center;        /* Centers the app's children horizontally */
+  justify-content: center;    /* Centers the app's children vertically */
+  font-size: calc(5px + 2vmin); /* Sets the font size to be responsive, based on the viewport width and height */
+  font-family: Arial, sans-serif; /* Sets the font of the app */
 }
 
+/* The .header class applies styles to the header of the app */
 .header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: flex;              /* Enables flexbox layout for the header's children */
+  flex-direction: column;     /* Stacks the header's children vertically */
+  align-items: center;        /* Centers the header's children horizontally */
 }
 
+/* The .logo class applies styles to the logo of the app */
 .logo {
-  width: 227px;
+  width: 227px;               /* Sets the width of the logo */
 }
 
+/* The .plantings-table class applies styles to the plantings table */
 .plantings-table {
-  width: 66%;
-  border-collapse: collapse;
+  width: 100%;                /* Sets the table width to take up the entire width of its parent container */
+  border-collapse: collapse;  /* Collapses the table's borders into a single border */
+  table-layout: fixed;        /* Sets the table layout to be fixed, which allows the table to adjust to the available space */
 }
 
+/* The .plantings-table th, .plantings-table td rule applies styles to the table headers and cells */
 .plantings-table th,
 .plantings-table td {
-  border: 1px solid #ffffff;
-  padding: 8px;
-  text-align: left;
+  border: 1px solid #ffffff;  /* Sets the border of the table headers and cells */
+  padding: 8px;               /* Adds padding inside the table headers and cells */
+  text-align: left;           /* Aligns the text to the left in the table headers and cells */
+  overflow: hidden;           /* Hides the overflowed content in the table headers and cells */
+  text-overflow: ellipsis;    /* Displays an ellipsis when the content is clipped */
+  white-space: nowrap;        /* Prevents the text from breaking down to the next line */
 }
 
+/* The .plantings-table th rule applies styles to the table headers */
 .plantings-table th {
-  background-color: #3c6e3e;
-  color: #ffffff;
+  background-color: #3c6e3e;  /* Sets the background color of the table headers */
+  color: #ffffff;             /* Sets the text color of the table headers */
 }
