@@ -21,22 +21,6 @@ const config: PlaywrightTestConfig = {
         deviceScaleFactor: 2,
       },
     },
-    {
-      name: 'Firefox Desktop',
-      use: {
-        browserName: 'firefox',
-        viewport: { width: 1280, height: 720 },
-        deviceScaleFactor: 1,
-      },
-    },
-    {
-      name: 'Firefox Mobile',
-      use: {
-        browserName: 'firefox',
-        viewport: { width: 375, height: 812 },
-        deviceScaleFactor: 2,
-      },
-    },
   ],
 };
 

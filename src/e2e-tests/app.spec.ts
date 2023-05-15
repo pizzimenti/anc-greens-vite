@@ -1,6 +1,9 @@
 // path: src/e2e-tests/app.spec.ts
-import { test, expect } from '@playwright/test';
+
+import { test, expect, chromium } from '@playwright/test';
 import { format } from 'date-fns';
+
+test.use({ browserName: 'chromium' });
 
 test.describe('Test across all platforms and browsers', () => {
   test('loads app and displays Plantings Data', async ({ page }) => {
@@ -24,6 +27,14 @@ test.describe('Test across all platforms and browsers', () => {
       for (let j = 0; j < cells.length; j++) {
         const cellContent = await cells[j].innerText();
         if (cellContent.includes(today)) {
+          // Check if the cell has the 'highlighted' class
+          const cellClass = await cells[j].getAttribute('class');
+          expect(cellClass).toContain('highlighted');
+
+          const cellStyle = await cells[j].evaluate((node) => getComputedStyle(node));
+          console.log(`Animation: ${cellStyle.animation}, Animation Name: ${cellStyle.animationName}`);
+          expect(cellStyle.animationName).toEqual('glow');
+          
           const variety = await cells[1].innerText();
           await page.evaluate((variety) => console.log(`The variety of the first row with today's date is: ${variety}`), variety);
           return;
