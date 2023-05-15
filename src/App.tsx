@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react";
-import { fetchPlantings } from "./services/api";
+import { fetchPlantings, Planting } from "./services/api";
 import logo from './logo.svg';
 import { formatDate } from "./services/dateUtils";
-import { Planting, filterPlantingsByDate } from "./services/dataFilters";
+import { filterPlantingsByDate } from "./services/dataFilters";
 
 import "./App.css";
 
 function App() {
   const [plantingsData, setPlantingsData] = useState<Planting[]>([]);
 
-  const fetchData = async () => {
-    const data = await fetchPlantings();
-    setPlantingsData(data);
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchPlantings();
+      setPlantingsData(data);
+    };
     fetchData();
   }, []);
-
-  const headers = plantingsData.length > 0 ? Object.keys(plantingsData[0]) : [];
 
   const dateColumns = [
     "seedDate",
@@ -51,7 +48,22 @@ function App() {
       {
         Object.entries(categories).map(([column, title]) => {
           const filteredPlantings = filterPlantingsByDate(plantingsData, column as keyof Planting);
-          return filteredPlantings.length > 0 ? (
+          if (filteredPlantings.length === 0) return null;
+
+          // Determine non-empty columns for each table
+          let nonEmptyColumns = new Set<string>();
+          filteredPlantings.forEach((row) => {
+            Object.entries(row).forEach(([key, value]) => {
+              if (value) {
+                nonEmptyColumns.add(key);
+              }
+            });
+          });
+
+          // Convert to array for mapping
+          const headers = Array.from(nonEmptyColumns);
+
+          return (
             <div key={column}>
               <h3>{title}</h3>
               <table className="plantings-table">
@@ -75,7 +87,7 @@ function App() {
                 </tbody>
               </table>
             </div>
-          ) : null;
+          );
         })
       }
     </div>
