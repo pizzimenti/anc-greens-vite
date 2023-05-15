@@ -1,3 +1,4 @@
+// path: src/e2e-tests/app.spec.ts
 import { test, expect } from '@playwright/test';
 import { format } from 'date-fns';
 

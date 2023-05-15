@@ -1,14 +1,18 @@
+// path: src/App.tsx
 import { useEffect, useState } from "react";
 import { fetchPlantings, Planting } from "./services/api";
 import logo from './logo.svg';
 import { formatDate } from "./services/dateUtils";
 import { filterPlantingsByDate } from "./services/dataFilters";
+import { isToday } from "date-fns"; // import isToday function from date-fns
 
 import "./App.css";
 
 function App() {
+  // This useState is used to hold our plantings data
   const [plantingsData, setPlantingsData] = useState<Planting[]>([]);
 
+  // This useEffect is used to fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPlantings();
@@ -17,6 +21,7 @@ function App() {
     fetchData();
   }, []);
 
+  // Here we declare our date columns
   const dateColumns = [
     "seedDate",
     "actualSeedDate",
@@ -28,6 +33,7 @@ function App() {
     "harvestDate",
   ];
 
+  // Here we define our categories
   const categories = {
     seedDate: "Today's Seeding",
     actualSeedDate: "Actual Seeding",
@@ -78,7 +84,11 @@ function App() {
                   {filteredPlantings.map((planting: Planting, index: number) => (
                     <tr key={index}>
                       {headers.map((header, headerIndex) => (
-                        <td key={headerIndex}>
+                        <td 
+                          key={headerIndex}
+                          // Add highlighted class if cell contains today's date
+                          className={dateColumns.includes(header) && isToday(new Date(planting[header])) ? 'highlighted' : ''}
+                        >
                           {dateColumns.includes(header) ? formatDate(planting[header]) : planting[header]}
                         </td>
                       ))}
