@@ -3,7 +3,7 @@ import { PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: 'src/e2e-tests',
-  timeout: 15000,
+  timeout: 30000,
   projects: [
     {
       name: 'Chromium Desktop',

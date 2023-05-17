@@ -51,20 +51,50 @@
   color: #ffffff;              /* Sets the text color of the headers to white */
 }
 
+/* YOUR EXISTING STYLES HERE */
+
 /* The .highlighted class applies styles to cells with today's date */
 .highlighted {
-  border: 2px solid #00ff00;   /* Sets the border of the highlighted cells to bright green */
-  color: #ffff00;              /* Sets the text color of the highlighted cells to yellow */
-  -webkit-animation: glow 1s ease-in-out infinite alternate; /* Adds a glowing animation to the highlighted cells for webkit browsers */
-  animation: glow 1s ease-in-out infinite alternate; /* Adds a glowing animation to the highlighted cells for other browsers */
+  /* Position relative allows the ::before pseudo-element to be positioned relative to this element */
+  position: relative; 
+  /* Sets the border of the highlighted cells to bright green */
+  border: 2px solid #00ff00; 
+  /* Sets the text color of the highlighted cells to yellow */
+  color: #ffff00; 
+  /* Disables any animations directly applied to the .highlighted element */
+  animation: none; 
+}
+
+/* The .highlighted::before pseudo-element creates a virtual element before the content of the .highlighted element */
+.highlighted::before {
+  /* Generates content for the ::before pseudo-element, required for it to be displayed */
+  content: ""; 
+  /* Positions the ::before pseudo-element absolutely relative to the .highlighted element */
+  position: absolute; 
+  /* Positions the ::before pseudo-element to cover the .highlighted element including its border */
+  top: -2px; right: -2px; bottom: -2px; left: -2px; 
+  /* Sets the border color of the pseudo-element to cyan, the same as the glow color */
+  border: 2px solid #00FFFF; 
+  /* Applies the same border radius as the .highlighted element to the pseudo-element */
+  border-radius: inherit; 
+  /* Starts with the pseudo-element fully transparent */
+  opacity: 0; 
+  /* Sets the background color of the pseudo-element to cyan */
+  background: #00FFFF; 
+  /* Applies a glowing effect to the pseudo-element */
+  box-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF, 0 0 40px #00FFFF; 
+  /* Adds a glowing animation to the pseudo-element */
+  animation: glow 4s ease-in-out infinite alternate; 
 }
 
 /* Defines the glowing animation */
 @keyframes glow {
-  0%, 100% { 
-    box-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF, 0 0 40px #00FFFF, 0 0 50px #00FFFF; 
+  /* Starts the animation with the pseudo-element at 10% opacity */
+  from {
+    opacity: 0.1;
   }
-  50% { 
-    box-shadow: 0 0 20px #00FFFF, 0 0 30px #00FFFF, 0 0 40px #00FFFF, 0 0 50px #00FFFF, 0 0 60px #00FFFF; 
+  /* Ends the animation with the pseudo-element at 30% opacity */
+  to {
+    opacity: 0.3;
   }
 }
