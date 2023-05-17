@@ -51,7 +51,6 @@
   color: #ffffff;              /* Sets the text color of the headers to white */
 }
 
-/* YOUR EXISTING STYLES HERE */
 
 /* The .highlighted class applies styles to cells with today's date */
 .highlighted {
@@ -80,11 +79,11 @@
   /* Starts with the pseudo-element fully transparent */
   opacity: 0; 
   /* Sets the background color of the pseudo-element to cyan */
-  background: #00FFFF; 
+  background: #00ff00; 
   /* Applies a glowing effect to the pseudo-element */
   box-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF, 0 0 40px #00FFFF; 
   /* Adds a glowing animation to the pseudo-element */
-  animation: glow 4s ease-in-out infinite alternate; 
+  animation: glow 2s ease-in-out infinite alternate; 
 }
 
 /* Defines the glowing animation */

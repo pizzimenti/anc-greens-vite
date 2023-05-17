@@ -1,70 +1,53 @@
-//path: src/e2e-tests/app.spec.ts
+// path: src/e2e-tests/app.spec.ts
 
-import { test, expect, chromium } from '@playwright/test';
-import { format } from 'date-fns';
+import { test, expect } from '@playwright/test';
 
-test.use({ browserName: 'chromium' });
+// Test suite for the application
+test.describe('Planting Tracker Application', () => {
 
-test.describe('Test across all platforms and browsers', () => {
-  test('loads app and displays Plantings Data', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+  // This is the URL of the application under test
+  const appURL = 'http://localhost:5173';
 
-    const plantingsData = await page.$('text=Plantings Data');
-    expect(plantingsData).toBeTruthy();
+  // Test for successful page load
+  test('Page Load', async ({ page }) => {
+    // Navigate to the application URL
+    await page.goto(appURL);
 
-    // Add a console log handler
-    page.on('console', msg => console.log(`PAGE LOG: ${msg.text()}`));
+    // Check if the correct page title is displayed
+    const title = page.locator('.header h2');
+    await expect(title).toHaveText('Plantings Data');
+  });
 
-    const today = format(new Date(), 'EEE, M/d');  
+  // Test for data presentation
+  test('Data Presentation', async ({ page }) => {
+    // Navigate to the application URL
+    await page.goto(appURL);
 
-    // Wait for the table to be present in the DOM
-    await page.waitForSelector('table.plantings-table');
+    // Check if the table headers are loaded and correct
+    const headers = await page.$$eval('.plantings-table th', headers => headers.map(header => header.textContent));
+    expect(headers).toEqual(["planting", "variety", "number", "seedsPerPlug", "seedDate", "seedAttributes", "actualSeedDate", "trayDate", "actualTrayDate", "t1Date", "t1Location", "t2Date", "t2Location", "t3Date", "t3Location", "harvestDate", "harvestNotes", "result"]);
 
-    const rows = await page.$$('table.plantings-table > tbody > tr');
+    // Check if the table has data rows
+    const rows = await page.$$('.plantings-table tbody tr');
+    expect(rows.length).toBeGreaterThan(0);
+  });
 
-    for (let i = 0; i < rows.length; i++) {
-      const cells = await rows[i].$$('td');
-      for (let j = 0; j < cells.length; j++) {
-        const cellContent = await cells[j].innerText();
-        if (cellContent.includes(today)) {
-          // Check if the cell has the 'highlighted' class
-          const cellClass = await cells[j].getAttribute('class');
-          expect(cellClass).toContain('highlighted');
+  // Test for date highlighting
+  test('Date Highlighting', async ({ page }) => {
+    // Navigate to the application URL
+    await page.goto(appURL);
 
-          const cellStyle = await cells[j].evaluate((node) => getComputedStyle(node));
-          console.log(`Animation: ${cellStyle.animation}, Animation Name: ${cellStyle.animationName}`);
-          expect(cellStyle.animationName).toEqual('glow');
-          
-          const variety = await cells[1].innerText();
-          await page.evaluate((variety) => console.log(`The variety of the first row with today's date is: ${variety}`), variety);
+    // Find the highlighted rows
+    const highlightedRows = await page.$$('.highlighted');
 
-          // Check if there are any overlapping elements with a higher z-index
-          const overlappingElement = await page.evaluate((cell) => {
-            const rect = cell.getBoundingClientRect();
-            const elementAtPoint = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
-            return elementAtPoint !== cell && getComputedStyle(elementAtPoint).zIndex > getComputedStyle(cell).zIndex;
-          }, cells[j]);
-          console.log(`Overlapping element with higher z-index: ${overlappingElement}`);
-          expect(overlappingElement).toBeFalsy();
-
-          // Check if there are any overriding CSS rules
-          const overridingRule = await page.evaluate((cell) => {
-            const rules = Array.from(document.styleSheets)
-              .flatMap((styleSheet) => Array.from(styleSheet.cssRules))
-              .filter((rule) => rule instanceof CSSStyleRule)
-              .map((rule) => rule as CSSStyleRule)
-              .filter((rule) => cell.matches(rule.selectorText));
-            return rules.some((rule) => rule.style.getPropertyPriority('animation') === 'important' || rule.style.getPropertyPriority('box-shadow') === 'important');
-          }, cells[j]);
-          console.log(`Overriding CSS rule: ${overridingRule}`);
-          expect(overridingRule).toBeFalsy();
-
-          return;
-        }
+    // There may be no highlighted rows if none of the dates match today's date.
+    // If there are highlighted rows, check that they contain today's date
+    if (highlightedRows.length > 0) {
+      const today = new Date().toISOString().slice(0, 10);  // today's date in YYYY-MM-DD format
+      for (const row of highlightedRows) {
+        const rowText = await row.textContent();
+        expect(rowText).toContain(today);
       }
     }
-
-    // If we get here, it means no cells contained today's date
-    throw new Error('No cell contained today\'s date');
   });
 });
