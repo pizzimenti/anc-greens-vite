@@ -1,16 +1,22 @@
 // path: src/App.tsx
+
 import { useEffect, useState } from "react";
 import { fetchPlantings, Planting } from "./services/api";
 import logo from './logo.svg';
 import { formatDate } from "./services/dateUtils";
 import { filterPlantingsByDate } from "./services/dataFilters";
-import { isToday } from "date-fns"; // import isToday function from date-fns
+import { isToday } from "date-fns"; 
+import Modal from 'react-modal';
 
 import "./App.css";
+
+// Set the root for the modal
+Modal.setAppElement('#root');
 
 function App() {
   // This useState is used to hold our plantings data
   const [plantingsData, setPlantingsData] = useState<Planting[]>([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   // This useEffect is used to fetch data on component mount
   useEffect(() => {
@@ -44,6 +50,10 @@ function App() {
     t3Date: "Today's T3",
     harvestDate: "Today's Harvest"
   };
+
+  const handleCellClick = () => {
+    setModalIsOpen(true);
+  }
 
   return (
     <div className="App">
@@ -86,8 +96,9 @@ function App() {
                       {headers.map((header, headerIndex) => (
                         <td 
                           key={headerIndex}
-                          // Add highlighted class if cell contains today's date
+                          // Add highlighted class if cell contains today's date and add onClick if it's today's date
                           className={dateColumns.includes(header) && isToday(new Date(planting[header])) ? 'highlighted' : ''}
+                          onClick={dateColumns.includes(header) && isToday(new Date(planting[header])) ? handleCellClick : undefined}
                         >
                           {dateColumns.includes(header) ? formatDate(planting[header]) : planting[header]}
                         </td>
@@ -100,6 +111,23 @@ function App() {
           );
         })
       }
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        contentLabel="Example Modal"
+        style={{
+          content: {
+            color: 'white',
+            backgroundColor: '#1a431c',
+          },
+          overlay: {
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }
+        }}
+      >
+        <h2>Modal Title</h2>
+        <button onClick={() => setModalIsOpen(false)} style={{backgroundColor: '#3c6e3e', color: 'white', border: 'none', padding: '10px 20px', cursor: 'pointer'}}>Close</button>
+      </Modal>
     </div>
   );
 }
