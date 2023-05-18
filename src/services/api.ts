@@ -1,5 +1,4 @@
 // Path: src/services/api.ts
-
 import { Planting } from '../types';
 
 const API_URL = 
