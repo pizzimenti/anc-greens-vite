@@ -97,24 +97,3 @@
     opacity: 0.3;
   }
 }
-
-/* The .modal class applies styles to the modal */
-.modal {
-  display: flex;               /* Enables flex layout for the modal */
-  flex-direction: column;      /* Sets the flex direction to column */
-  align-items: center;         /* Aligns items in the center along the cross axis */
-  justify-content: center;     /* Aligns items in the center along the main axis */
-  width: 60%;                  /* Sets the width of the modal to 60% of its parent's width */
-  max-width: 600px;            /* Sets a maximum width for the modal */
-  margin: auto;                /* Centers the modal vertically and horizontally */
-  background-color: #3c6e3e;   /* Sets the background color of the modal to a darker green */
-  color: #ffffff;              /* Sets the text color of the modal to white */
-  padding: 20px;               /* Adds padding inside the modal */
-  border-radius: 10px;         /* Rounds the corners of the modal */
-  position: fixed;             /* Fixes the position of the modal so it doesn't move when the page scrolls */
-  top: 50%;                    /* Centers the modal vertically */
-  left: 50%;                   /* Centers the modal horizontally */
-  transform: translate(-50%, -50%); /* Moves the modal to the center of the page */
-  z-index: 1000;               /* Positions the modal above other elements */
-  box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);  /* Adds a subtle shadow to give depth */
-}
