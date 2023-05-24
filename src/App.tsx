@@ -1,7 +1,8 @@
 // path: src/App.tsx
 
 import { useEffect, useState } from "react";
-import { fetchPlantings, Planting } from "./services/api";
+import { fetchPlantings } from "./services/api";
+import { Planting } from "./types";
 import logo from './logo.svg';
 import { formatDate } from "./services/dateUtils";
 import { filterPlantingsByDate } from "./services/dataFilters";
@@ -14,11 +15,10 @@ import "./App.css";
 Modal.setAppElement('#root');
 
 function App() {
-  // This useState is used to hold our plantings data
   const [plantingsData, setPlantingsData] = useState<Planting[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalType, setModalType] = useState("");
 
-  // This useEffect is used to fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPlantings();
@@ -27,31 +27,26 @@ function App() {
     fetchData();
   }, []);
 
-  // Here we declare our date columns
   const dateColumns = [
     "seedDate",
-    "actualSeedDate",
     "trayDate",
-    "actualTrayDate",
     "t1Date",
     "t2Date",
     "t3Date",
     "harvestDate",
   ];
 
-  // Here we define our categories
   const categories = {
     seedDate: "Today's Seeding",
-    actualSeedDate: "Actual Seeding",
     trayDate: "Today's Tray",
-    actualTrayDate: "Actual Tray Date",
     t1Date: "Today's T1",
     t2Date: "Today's T2",
     t3Date: "Today's T3",
     harvestDate: "Today's Harvest"
   };
 
-  const handleCellClick = () => {
+  const handleCellClick = (type: string) => {
+    setModalType(type);
     setModalIsOpen(true);
   }
 
@@ -66,7 +61,6 @@ function App() {
           const filteredPlantings = filterPlantingsByDate(plantingsData, column as keyof Planting);
           if (filteredPlantings.length === 0) return null;
 
-          // Determine non-empty columns for each table
           let nonEmptyColumns = new Set<string>();
           filteredPlantings.forEach((row) => {
             Object.entries(row).forEach(([key, value]) => {
@@ -76,7 +70,6 @@ function App() {
             });
           });
 
-          // Convert to array for mapping
           const headers = Array.from(nonEmptyColumns);
 
           return (
@@ -96,9 +89,8 @@ function App() {
                       {headers.map((header, headerIndex) => (
                         <td 
                           key={headerIndex}
-                          // Add highlighted class if cell contains today's date and add onClick if it's today's date
                           className={dateColumns.includes(header) && isToday(new Date(planting[header])) ? 'highlighted' : ''}
-                          onClick={dateColumns.includes(header) && isToday(new Date(planting[header])) ? handleCellClick : undefined}
+                          onClick={dateColumns.includes(header) && isToday(new Date(planting[header])) ? () => handleCellClick(column) : undefined}
                         >
                           {dateColumns.includes(header) ? formatDate(planting[header]) : planting[header]}
                         </td>
@@ -113,7 +105,10 @@ function App() {
       }
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
+        onRequestClose={() => {
+          setModalIsOpen(false);
+          setModalType("");
+        }}
         contentLabel="Example Modal"
         style={{
           content: {
@@ -125,8 +120,46 @@ function App() {
           }
         }}
       >
-        <h2>Modal Title</h2>
-        <button onClick={() => setModalIsOpen(false)} style={{backgroundColor: '#3c6e3e', color: 'white', border: 'none', padding: '10px 20px', cursor: 'pointer'}}>Close</button>
+        {modalType === "seedDate" && (
+          <div>
+            <h2>Today's Seeding</h2>
+            {/* Add other contents specific to Seed modal */}
+          </div>
+        )}
+        {modalType === "trayDate" && (
+          <div>
+            <h2>Today's Tray</h2>
+            {/* Add other contents specific to Tray modal */}
+          </div>
+        )}
+        {modalType === "t1Date" && (
+          <div>
+            <h2>Today's T1</h2>
+            {/* Add other contents specific to T1 modal */}
+          </div>
+        )}
+        {modalType === "t2Date" && (
+          <div>
+            <h2>Today's T2</h2>
+            {/* Add other contents specific to T2 modal */}
+          </div>
+        )}
+        {modalType === "t3Date" && (
+          <div>
+            <h2>Today's T3</h2>
+            {/* Add other contents specific to T3 modal */}
+          </div>
+        )}
+        {modalType === "harvestDate" && (
+          <div>
+            <h2>Today's Harvest</h2>
+            {/* Add other contents specific to Harvest modal */}
+          </div>
+        )}
+        <button onClick={() => {
+          setModalIsOpen(false);
+          setModalType("");
+        }} style={{backgroundColor: '#3c6e3e', color: 'white', border: 'none', padding: '10px 20px', cursor: 'pointer'}}>Close</button>
       </Modal>
     </div>
   );
