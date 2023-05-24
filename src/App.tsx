@@ -5,23 +5,20 @@ import { fetchPlantings, Planting } from "./services/api";
 import logo from './logo.svg';
 import { formatDate } from "./services/dateUtils";
 import { filterPlantingsByDate } from "./services/dataFilters";
-import { isToday } from "date-fns";
-
-// Import the modal components
-import { SeedModal, TrayModal, TransplantModal, HarvestModal } from "./components/Modals";
+import { isToday } from "date-fns"; 
+import Modal from 'react-modal';
 
 import "./App.css";
 
+// Set the root for the modal
+Modal.setAppElement('#root');
+
 function App() {
+  // This useState is used to hold our plantings data
   const [plantingsData, setPlantingsData] = useState<Planting[]>([]);
-  const [selectedCell, setSelectedCell] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  // State for modals
-  const [isSeedModalOpen, setSeedModalOpen] = useState(false);
-  const [isTrayModalOpen, setTrayModalOpen] = useState(false);
-  const [isTransplantModalOpen, setTransplantModalOpen] = useState(false);
-  const [isHarvestModalOpen, setHarvestModalOpen] = useState(false);
-
+  // This useEffect is used to fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPlantings();
@@ -30,6 +27,7 @@ function App() {
     fetchData();
   }, []);
 
+  // Here we declare our date columns
   const dateColumns = [
     "seedDate",
     "actualSeedDate",
@@ -41,43 +39,20 @@ function App() {
     "harvestDate",
   ];
 
+  // Here we define our categories
   const categories = {
     seedDate: "Today's Seeding",
+    actualSeedDate: "Actual Seeding",
     trayDate: "Today's Tray",
+    actualTrayDate: "Actual Tray Date",
     t1Date: "Today's T1",
     t2Date: "Today's T2",
     t3Date: "Today's T3",
     harvestDate: "Today's Harvest"
   };
 
-  // Handler to open modals
-  const handleOpenModal = (category: string) => {
-    setSelectedCell(category);
-    switch(category) {
-      case "seedDate":
-        setSeedModalOpen(true);
-        break;
-      case "trayDate":
-        setTrayModalOpen(true);
-        break;
-      case "t1Date":
-      case "t2Date":
-      case "t3Date":
-        setTransplantModalOpen(true);
-        break;
-      case "harvestDate":
-        setHarvestModalOpen(true);
-        break;
-    }
-  }
-
-  // Handler to close modals
-  const handleCloseModal = () => {
-    setSelectedCell(null);
-    setSeedModalOpen(false);
-    setTrayModalOpen(false);
-    setTransplantModalOpen(false);
-    setHarvestModalOpen(false);
+  const handleCellClick = () => {
+    setModalIsOpen(true);
   }
 
   return (
@@ -86,31 +61,73 @@ function App() {
         <img src={logo} alt="Logo" className="logo" />
         <h2>Plantings Data</h2>
       </div>
-      {Object.entries(categories).map(([column, title]) => {
-        // ... Same as before ...
+      {
+        Object.entries(categories).map(([column, title]) => {
+          const filteredPlantings = filterPlantingsByDate(plantingsData, column as keyof Planting);
+          if (filteredPlantings.length === 0) return null;
 
-        return (
-          <div key={column}>
-            <h3>{title}</h3>
-            <table className="plantings-table">
-              {/* ... Same as before ... */}
-                  <td
-                    key={headerIndex}
-                    className={dateColumns.includes(header) && isToday(new Date(planting[header])) ? 'highlighted' : ''}
-                    onClick={() => handleOpenModal(column)}
-                  >
-                    {dateColumns.includes(header) ? formatDate(planting[header]) : planting[header]}
-                  </td>
-              {/* ... Same as before ... */}
-            </table>
-          </div>
-        );
-      })}
-      
-      {isSeedModalOpen && <SeedModal onClose={handleCloseModal} />}
-      {isTrayModalOpen && <TrayModal onClose={handleCloseModal} />}
-      {isTransplantModalOpen && <TransplantModal onClose={handleCloseModal} />}
-      {isHarvestModalOpen && <HarvestModal onClose={handleCloseModal} />}
+          // Determine non-empty columns for each table
+          let nonEmptyColumns = new Set<string>();
+          filteredPlantings.forEach((row) => {
+            Object.entries(row).forEach(([key, value]) => {
+              if (value) {
+                nonEmptyColumns.add(key);
+              }
+            });
+          });
+
+          // Convert to array for mapping
+          const headers = Array.from(nonEmptyColumns);
+
+          return (
+            <div key={column}>
+              <h3>{title}</h3>
+              <table className="plantings-table">
+                <thead>
+                  <tr>
+                    {headers.map((header, index) => (
+                      <th key={index}>{header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPlantings.map((planting: Planting, index: number) => (
+                    <tr key={index}>
+                      {headers.map((header, headerIndex) => (
+                        <td 
+                          key={headerIndex}
+                          // Add highlighted class if cell contains today's date and add onClick if it's today's date
+                          className={dateColumns.includes(header) && isToday(new Date(planting[header])) ? 'highlighted' : ''}
+                          onClick={dateColumns.includes(header) && isToday(new Date(planting[header])) ? handleCellClick : undefined}
+                        >
+                          {dateColumns.includes(header) ? formatDate(planting[header]) : planting[header]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        })
+      }
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        contentLabel="Example Modal"
+        style={{
+          content: {
+            color: 'white',
+            backgroundColor: '#1a431c',
+          },
+          overlay: {
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }
+        }}
+      >
+        <h2>Modal Title</h2>
+        <button onClick={() => setModalIsOpen(false)} style={{backgroundColor: '#3c6e3e', color: 'white', border: 'none', padding: '10px 20px', cursor: 'pointer'}}>Close</button>
+      </Modal>
     </div>
   );
 }
