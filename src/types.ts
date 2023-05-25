@@ -1,7 +1,7 @@
 // Path: src/types.ts
 
 export interface Planting {
-  planting: string;
+  plantingId: string;
   variety: string;
   number: number;
   seedsPerPlug: number;
@@ -22,7 +22,7 @@ export interface Planting {
 }
 
 export class PlantingData implements Planting {
-  planting: string;
+  plantingId: string;
   variety: string;
   number: number;
   seedsPerPlug: number;
@@ -42,7 +42,7 @@ export class PlantingData implements Planting {
   result: string;
 
   constructor(rowData: any) {
-    this.planting = rowData[0];
+    this.plantingId = rowData[0];
     this.variety = rowData[1];
     this.number = rowData[2];
     this.seedsPerPlug = rowData[3];
