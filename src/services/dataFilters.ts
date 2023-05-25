@@ -1,19 +1,16 @@
 // path: src/services/dataFilters.ts
 import { isToday, parseISO } from 'date-fns';
+import { Planting } from '../types';  
 
-export type Planting = {
-  harvestDate: string;
-  T3Date: string;
-  T2Date: string;
-  T1Date: string;
-  trayDate: string;
-  seedingDate: string;
-  [key: string]: any;  // for additional properties
-}
-
-export function filterPlantingsByDate(plantings: Planting[], column: keyof Planting): Planting[] {
+export function checkIfPlantingHasTodayActivity(plantings: Planting[], column: keyof Planting): Planting[] {
   return plantings.filter(planting => {
-    const date = parseISO(planting[column]);
-    return isToday(date);
+    const value = planting[column];
+    if (typeof value === 'string') {
+      const date = parseISO(value);
+      if (!isNaN(date.getTime())) { // ensures parsed string is a valid date
+        return isToday(date);
+      }
+    }
+    return false;
   });
 }

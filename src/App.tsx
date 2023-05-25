@@ -5,7 +5,7 @@ import { fetchPlantings } from "./services/api";
 import { Planting } from "./types";
 import logo from './logo.svg';
 import { formatDate } from "./services/dateUtils";
-import { filterPlantingsByDate } from "./services/dataFilters";
+import { checkIfPlantingHasTodayActivity } from "./services/dataFilters";
 import { isToday } from "date-fns";
 import Modal from 'react-modal';
 
@@ -61,7 +61,7 @@ function App() {
       </div>
       {
         Object.entries(categories).map(([column, title]) => {
-          const filteredPlantings = filterPlantingsByDate(plantingsData, column as keyof Planting);
+          const filteredPlantings = checkIfPlantingHasTodayActivity(plantingsData, column as keyof Planting);
           if (filteredPlantings.length === 0) return null;
 
           let nonEmptyColumns = new Set<string>();
