@@ -1,4 +1,4 @@
-// Path: src/types/index.ts
+// Path: src/types.ts
 
 export interface Planting {
   planting: string;

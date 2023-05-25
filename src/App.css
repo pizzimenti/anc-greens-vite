@@ -97,3 +97,48 @@
     opacity: 0.3;
   }
 }
+
+/* ****** MODALS ***** */
+
+/* The .content class applies styles to the Modal's content */
+.content {
+  color: white;
+  background-color: #1a431c;
+}
+
+/* The .overlay class applies styles to the Modal's overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* The .content class applies styles to the Modal's content */
+.content {
+  position: relative;
+  color: white;
+  background-color: #1a431c;
+  outline: none;
+  /* Adjust the width and height according to your needs */
+  width: 70%;
+  height: 60%; /* Decreased from 80% to 60% to make it vertically smaller */
+  padding: 20px;
+  border: 2px solid white; /* Added a white border */
+}
+
+
+
+/* The .modalButton class applies styles to the button in the modal */
+.modalButton {
+  background-color: #3c6e3e; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  cursor: pointer;
+}
