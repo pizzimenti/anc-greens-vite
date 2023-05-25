@@ -1,112 +1,85 @@
-
-/* path: src/App.css */
-
-/* The .App class applies styles to the main application container */
+/* Styles for the main application container */
 .App {
-  text-align: center;          /* Centers the text inside the App */
-  background-color: #1a431c;   /* Sets the background color of the App to a dark green */
-  color: #ffffff;              /* Sets the text color of the App to white */
-  min-height: 100vh;           /* Sets the minimum height of the App to fill the full viewport height */
-  display: flex;               /* Enables flex layout for the App */
-  flex-direction: column;      /* Sets the flex direction to column */
-  align-items: center;         /* Aligns items in the center along the cross axis */
-  justify-content: center;     /* Aligns items in the center along the main axis */
-  font-size: calc(5px + 2vmin);/* Sets the font size relative to the viewport width and height */
-  font-family: Arial, sans-serif; /* Sets the font family of the App */
+  text-align: center;  
+  background-color: #1a431c;   
+  color: #ffffff;  
+  min-height: 100vh;  
+  display: flex;  
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: calc(5px + 2vmin);
+  font-family: Arial, sans-serif;
 }
 
-/* The .header class applies styles to the header */
+/* Styles for the header */
 .header {
-  display: flex;               /* Enables flex layout for the header */
-  flex-direction: column;      /* Sets the flex direction to column */
-  align-items: center;         /* Aligns items in the center along the cross axis */
+  display: flex;   
+  flex-direction: column;   
+  align-items: center;   
 }
 
-/* The .logo class applies styles to the logo */
+/* Styles for the logo */
 .logo {
-  width: 227px;                /* Sets the width of the logo */
+  width: 227px;  
 }
 
-/* The .plantings-table class applies styles to the plantings table */
+/* Styles for the plantings table */
 .plantings-table {
-  width: 100%;                 /* Sets the width of the table to fill its parent */
-  border-collapse: collapse;   /* Collapses the borders of the table cells into a single line */
-  table-layout: fixed;         /* Sets a fixed table layout which makes the table render faster */
+  width: 100%;  
+  border-collapse: collapse;
+  table-layout: fixed;   
 }
 
-/* Applies styles to the table header cells and table data cells */
+/* Styles for the table header cells and table data cells */
 .plantings-table th,
 .plantings-table td {
-  border: 1px solid #ffffff;   /* Sets the border of the cells to a white line */
-  padding: 8px;                /* Sets the padding inside the cells */
-  text-align: left;            /* Aligns the text to the left inside the cells */
-  overflow: hidden;            /* Hides the text that overflows the cell */
-  text-overflow: ellipsis;     /* Adds an ellipsis (...) when the text overflows the cell */
-  white-space: nowrap;         /* Prevents the text from wrapping to the next line */
+  border: 1px solid #ffffff;  
+  padding: 8px;  
+  text-align: left;  
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
 }
 
-/* The .plantings-table th class applies styles to the table headers */
+/* Styles for the table headers */
 .plantings-table th {
-  background-color: #3c6e3e;   /* Sets the background color of the headers to a darker green */
-  color: #ffffff;              /* Sets the text color of the headers to white */
+  background-color: #3c6e3e;  
+  color: #ffffff;  
 }
 
-
-/* The .highlighted class applies styles to cells with today's date */
+/* Styles for cells with today's date */
 .highlighted {
-  /* Position relative allows the ::before pseudo-element to be positioned relative to this element */
   position: relative; 
-  /* Sets the border of the highlighted cells to bright green */
   border: 2px solid #00ff00; 
-  /* Sets the text color of the highlighted cells to yellow */
   color: #ffff00; 
-  /* Disables any animations directly applied to the .highlighted element */
   animation: none; 
 }
 
-/* The .highlighted::before pseudo-element creates a virtual element before the content of the .highlighted element */
+/* Styles for virtual element before the content of the .highlighted element */
 .highlighted::before {
-  /* Generates content for the ::before pseudo-element, required for it to be displayed */
   content: ""; 
-  /* Positions the ::before pseudo-element absolutely relative to the .highlighted element */
   position: absolute; 
-  /* Positions the ::before pseudo-element to cover the .highlighted element including its border */
   top: -2px; right: -2px; bottom: -2px; left: -2px; 
-  /* Sets the border color of the pseudo-element to cyan, the same as the glow color */
   border: 2px solid #00FFFF; 
-  /* Applies the same border radius as the .highlighted element to the pseudo-element */
   border-radius: inherit; 
-  /* Starts with the pseudo-element fully transparent */
   opacity: 0; 
-  /* Sets the background color of the pseudo-element to cyan */
   background: #00ff00; 
-  /* Applies a glowing effect to the pseudo-element */
   box-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF, 0 0 40px #00FFFF; 
-  /* Adds a glowing animation to the pseudo-element */
   animation: glow 2s ease-in-out infinite alternate; 
 }
 
 /* Defines the glowing animation */
 @keyframes glow {
-  /* Starts the animation with the pseudo-element at 10% opacity */
   from {
     opacity: 0.1;
   }
-  /* Ends the animation with the pseudo-element at 30% opacity */
   to {
     opacity: 0.3;
   }
 }
 
-/* ****** MODALS ***** */
-
-/* The .content class applies styles to the Modal's content */
-.content {
-  color: white;
-  background-color: #1a431c;
-}
-
-/* The .overlay class applies styles to the Modal's overlay */
+/* Styles for the Modal's overlay */
 .overlay {
   position: fixed;
   top: 0;
@@ -119,22 +92,22 @@
   align-items: center;
 }
 
-/* The .content class applies styles to the Modal's content */
+/* Styles for the Modal's content, includes white border, border-radius and backdrop-filter for 'frosted' effect */
 .content {
   position: relative;
   color: white;
   background-color: #1a431c;
   outline: none;
-  /* Adjust the width and height according to your needs */
   width: 70%;
-  height: 60%; /* Decreased from 80% to 60% to make it vertically smaller */
+  height: 60%;
   padding: 20px;
-  border: 2px solid white; /* Added a white border */
+  border: 2px solid white; 
+  border-radius: 1em;
+  backdrop-filter: blur(3px);
+  background: rgba(255, 255, 255, 0.1); /* This applies a white background with 70% opacity */
 }
 
-
-
-/* The .modalButton class applies styles to the button in the modal */
+/* Styles for the button in the modal */
 .modalButton {
   background-color: #3c6e3e; 
   color: white; 
