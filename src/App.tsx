@@ -93,7 +93,7 @@ function App() {
                             className={dateColumns.includes(header) && isToday(parseISO(planting[header as keyof Planting] as string)) ? 'highlighted' : ''}
                             onClick={dateColumns.includes(header) && isToday(parseISO(planting[header as keyof Planting] as string)) ? () => handleCellClick(column, planting) : undefined}
                           >
-                            {getPropertyValue(planting, header)}
+                            {getPropertyValue(planting, header, dateColumns)}
                           </td>
                         ))}
                       </tr>
@@ -148,10 +148,10 @@ function App() {
   );
 }
 
-function getPropertyValue(object: any, property: string) {
+function getPropertyValue(object: any, property: string, dateColumns: string[]) {
   const value = object[property as keyof Planting];
-  if (value instanceof Date) {
-    return formatDate(value.toISOString());
+  if (dateColumns.includes(property)) {
+    return formatDate(value);
   }
   return value;
 }
