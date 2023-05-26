@@ -114,9 +114,16 @@
   border: none; 
   padding: 10px 20px; 
   cursor: pointer;
-
   border: 2px solid white; 
   border-radius: 1em;
   backdrop-filter: blur(5px);
   background: rgba(0, 0, 0, 0.2); /* This applies a white background with 70% opacity */
+}
+
+
+/* Styles for the modal table */
+.modal-table td, .modal-table th {
+  border: 2px solid white; /* Match to the modalButton border */
+  padding: 4px; /* Match to the modalButton padding */
+  background: rgba(0, 0, 0, 0.1); /* Match to the modalButton background */
 }

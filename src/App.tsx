@@ -1,12 +1,10 @@
-// path: src/App.tsx
-
 import { useEffect, useState } from "react";
 import { fetchPlantings } from "./services/api";
 import { Planting } from "./types";
 import logo from './logo.svg';
 import { formatDate } from "./services/dateUtils";
 import { checkIfPlantingHasTodayActivity } from "./services/dataFilters";
-import { isToday } from "date-fns";
+import { isToday, parseISO } from "date-fns";
 import Modal from 'react-modal';
 
 import "./App.css";
@@ -19,7 +17,6 @@ function App() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const [modalData, setModalData] = useState<Planting | null>(null);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +35,7 @@ function App() {
     "harvestDate",
   ];
 
-  const categories = {
+  const categories: { [key: string]: string } = {
     seedDate: "Today's Seeding",
     trayDate: "Today's Tray",
     t1Date: "Today's T1",
@@ -93,10 +90,10 @@ function App() {
                         {headers.map((header, headerIndex) => (
                           <td
                             key={headerIndex}
-                            className={dateColumns.includes(header) && isToday(new Date(planting[header])) ? 'highlighted' : ''}
-                            onClick={dateColumns.includes(header) && isToday(new Date(planting[header])) ? () => handleCellClick(column, planting) : undefined}
+                            className={dateColumns.includes(header) && isToday(parseISO(planting[header as keyof Planting] as string)) ? 'highlighted' : ''}
+                            onClick={dateColumns.includes(header) && isToday(parseISO(planting[header as keyof Planting] as string)) ? () => handleCellClick(column, planting) : undefined}
                           >
-                            {dateColumns.includes(header) ? formatDate(planting[header]) : planting[header]}
+                            {getPropertyValue(planting, header)}
                           </td>
                         ))}
                       </tr>
@@ -119,40 +116,26 @@ function App() {
         className="content"
         overlayClassName="overlay"
       >
-        {modalType === "seedDate" && (
+        {modalType && modalData && (
           <div className="modalContent">
-            <h2>Seed Item</h2>
-            <p>{modalData ? JSON.stringify(modalData) : 'No data'}</p>
-          </div>
-        )}
-        {modalType === "trayDate" && (
-          <div className="modalContent">
-            <h2>Tray Item</h2>
-            <p>{modalData ? JSON.stringify(modalData) : 'No data'}</p>
-          </div>
-        )}
-        {modalType === "t1Date" && (
-          <div className="modalContent">
-            <h2>T1 Item</h2>
-            <p>{modalData ? JSON.stringify(modalData) : 'No data'}</p>
-          </div>
-        )}
-        {modalType === "t2Date" && (
-          <div className="modalContent">
-            <h2>T2 Item</h2>
-            <p>{modalData ? JSON.stringify(modalData) : 'No data'}</p>
-          </div>
-        )}
-        {modalType === "t3Date" && (
-          <div className="modalContent">
-            <h2>T3 Item</h2>
-            <p>{modalData ? JSON.stringify(modalData) : 'No data'}</p>
-          </div>
-        )}
-        {modalType === "harvestDate" && (
-          <div className="modalContent">
-            <h2>Harvest Item</h2>
-            <p>{modalData ? JSON.stringify(modalData) : 'No data'}</p>
+            <h2>{categories[modalType]}</h2>
+            <table className="modal-table">
+              <thead>
+                <tr>
+                  <th>Variety</th>
+                  <th>Number</th>
+                  <th>Seeds Per Plug</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{modalData.variety}</td>
+                  <td>{modalData.number}</td>
+                  <td>{modalData.seedsPerPlug}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>{JSON.stringify(modalData)}</p>
           </div>
         )}
         <button onClick={() => {
@@ -163,6 +146,14 @@ function App() {
       </Modal>
     </div>
   );
+}
+
+function getPropertyValue(object: any, property: string) {
+  const value = object[property as keyof Planting];
+  if (value instanceof Date) {
+    return formatDate(value.toISOString());
+  }
+  return value;
 }
 
 export default App;
