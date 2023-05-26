@@ -31,20 +31,30 @@ const PlantingTable: React.FC<PlantingTableProps> = ({ title, plantings, headers
                                 {headers.map((header, headerIndex) => {
                                     const cellValue = planting[header as keyof Planting];
 
-                                    if (typeof cellValue === "string" && isToday(parseISO(cellValue))) {
+                                    if (typeof cellValue === "string" && !isNaN(Date.parse(cellValue))) {
                                         return (
                                             <td
                                                 key={headerIndex}
-                                                className='highlighted'
+                                                className={isToday(parseISO(cellValue)) ? 'highlighted' : ''}
                                                 onClick={() => handleCellClick(title, planting)}
                                             >
                                                 {formatDate(cellValue)}
                                             </td>
                                         );
+                                    } else if (cellValue instanceof Date) {
+                                        return (
+                                            <td
+                                                key={headerIndex}
+                                                className={isToday(cellValue) ? 'highlighted' : ''}
+                                                onClick={() => handleCellClick(title, planting)}
+                                            >
+                                                {formatDate(cellValue.toISOString())}
+                                            </td>
+                                        );
                                     }
                                     return (
                                         <td key={headerIndex}>
-                                            {typeof cellValue === "number" ? cellValue.toString() : cellValue instanceof Date ? cellValue.toISOString() : cellValue}
+                                            {typeof cellValue === "number" ? cellValue.toString() : cellValue}
                                         </td>
                                     );
                                 })}

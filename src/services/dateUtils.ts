@@ -1,12 +1,15 @@
 // path: src/services/dateUtils.ts
 
-
 export function formatDate(dateString: string | null): string {
   if (!dateString) {
     return "";
   }
 
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return dateString; // If it's not a valid date, return the original string.
+  }
+
   const options: Intl.DateTimeFormatOptions = {
     timeZone: "America/Anchorage",
     weekday: "short",
