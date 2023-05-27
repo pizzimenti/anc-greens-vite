@@ -104,6 +104,7 @@
   border: 2px solid white; 
   border-radius: 1em;
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   background: rgba(0, 0, 0, 0.2); /* This applies a white background with 70% opacity */
 }
 
