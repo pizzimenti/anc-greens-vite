@@ -1,5 +1,3 @@
-// pathname: /App.tsx
-
 import { useEffect, useState } from "react";
 import { fetchPlantings } from "./services/api";
 import { Planting } from "./types";
@@ -9,6 +7,7 @@ import { getDisplayedColumns } from "./services/tableUtils";
 import Modal from 'react-modal';
 import PlantingTable from './components/PlantingTable';
 import ActivityModal from './components/ActivityModal';
+import { ClipLoader } from 'react-spinners'; // import the loading spinner
 
 import "./App.css";
 
@@ -20,11 +19,13 @@ function App() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const [modalData, setModalData] = useState<Planting | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // new state variable for loading
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPlantings();
       setPlantingsData(data);
+      setIsLoading(false); // set loading to false after data is fetched
     };
     fetchData();
   }, []);
@@ -51,6 +52,10 @@ function App() {
         <h2>Plantings Data</h2>
       </div>
       {
+        isLoading ? // show spinner if loading
+        <div className="loader-container">
+          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
+        </div> : 
         Object.entries(categories).map(([column, title]) => {
           const filteredPlantings = checkIfPlantingHasTodayActivity(plantingsData, column as keyof Planting);
           if (filteredPlantings.length === 0) return null;
@@ -58,7 +63,7 @@ function App() {
           const displayedColumns = getDisplayedColumns(filteredPlantings);
 
           return (
-            <PlantingTable key={column} title={title} plantings={filteredPlantings} headers={Array.from(displayedColumns)} handleCellClick={handleCellClick} />
+            <PlantingTable key={column} title={title} plantings={filteredPlantings} headers={Array.from(displayedColumns)} handleCellClick={handleCellClick} displayedColumns={displayedColumns} />
           );
         })
       }

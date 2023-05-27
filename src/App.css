@@ -128,3 +128,10 @@
   padding: 4px; /* Match to the modalButton padding */
   background: rgba(0, 0, 0, 0.1); /* Match to the modalButton background */
 }
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
