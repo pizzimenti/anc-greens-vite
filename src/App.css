@@ -1,30 +1,69 @@
+/* path: src/App.css */
+
 /* Styles for the main application container */
+/* This is where the overall app layout and global styles are defined */
 .App {
+  /* Centering the content */
   text-align: center;  
-  background-color: #1a431c;   
-  color: #ffffff;  
-  min-height: 100vh;  
+  /* Aligning items in the center */
   display: flex;  
   flex-direction: column; 
   align-items: center; 
   justify-content: center; 
+  /* Full width and height */
+  width: 100vw;
+  height: 100vh;
+  /* Setting the background color and text color */
+  background-color: #1a431c;   
+  color: #ffffff;  
+  /* Setting the default font size and family */
   font-size: calc(5px + 2vmin);
   font-family: Arial, sans-serif;
 }
 
+/* Styles for the logo */
+/* This controls the size and placement of the logo image */
+.logo {
+  width: 66.66vw;  
+  max-width: 66%;
+  /* Centering the logo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Styles for the header */
+/* This contains the logo and controls its layout */
 .header {
   display: flex;   
   flex-direction: column;   
   align-items: center;   
 }
 
-/* Styles for the logo */
-.logo {
-  width: 227px;  
+/* Styles for the loader container */
+/* This is where the loading spinner will be displayed while data is loading */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Setting the width same as logo and placing it beneath the logo */
+  width: 66.66vw;
+  max-width: 66%;
+  margin-top: 2em;
+}
+
+/* Styles for the spinner */
+/* This controls the size and color of the loading spinner */
+.react-spinners--clip-loader {
+  width: 100% !important;
+  height: auto !important;
+  /* Changing the spinner color to chartreuse */
+  border-color: #7FFF00 transparent transparent transparent !important; 
+  border-width: 4px !important;
 }
 
 /* Styles for the plantings table */
+/* This sets up the general layout and dimensions of the table */
 .plantings-table {
   width: 100%;  
   border-collapse: collapse;
@@ -32,6 +71,7 @@
 }
 
 /* Styles for the table header cells and table data cells */
+/* This is used to style the table headers and the table data cells uniformly */
 .plantings-table th,
 .plantings-table td {
   border: 1px solid #ffffff;  
@@ -43,12 +83,14 @@
 }
 
 /* Styles for the table headers */
+/* This is used specifically to style the table headers */
 .plantings-table th {
   background-color: #3c6e3e;  
   color: #ffffff;  
 }
 
 /* Styles for cells with today's date */
+/* This styles the cells that contain today's date */
 .highlighted {
   position: relative; 
   border: 2px solid #00ff00; 
@@ -57,6 +99,7 @@
 }
 
 /* Styles for virtual element before the content of the .highlighted element */
+/* This is used to create a glowing effect around cells with today's date */
 .highlighted::before {
   content: ""; 
   position: absolute; 
@@ -70,6 +113,7 @@
 }
 
 /* Defines the glowing animation */
+/* This is the keyframes definition for the glowing animation */
 @keyframes glow {
   from {
     opacity: 0.1;
@@ -80,6 +124,7 @@
 }
 
 /* Styles for the Modal's overlay */
+/* This sets up the semi-transparent overlay that appears when the modal is open */
 .overlay {
   position: fixed;
   top: 0;
@@ -92,7 +137,8 @@
   align-items: center;
 }
 
-/* Styles for the Modal's content, includes white border, border-radius and backdrop-filter for 'frosted' effect */
+/* Styles for the Modal's content */
+/* This styles the content box that appears in the center of the overlay when the modal is open */
 .content {
   position: relative;
   color: white;
@@ -105,10 +151,11 @@
   border-radius: 1em;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  background: rgba(0, 0, 0, 0.2); /* This applies a white background with 70% opacity */
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* Styles for the button in the modal */
+/* This styles the button that appears in the modal */
 .modalButton {
   background-color: #3c6e3e; 
   color: white; 
@@ -118,20 +165,13 @@
   border: 2px solid white; 
   border-radius: 1em;
   backdrop-filter: blur(5px);
-  background: rgba(0, 0, 0, 0.2); /* This applies a white background with 70% opacity */
+  background: rgba(0, 0, 0, 0.2);
 }
 
-
 /* Styles for the modal table */
+/* This styles the table that appears in the modal */
 .modal-table td, .modal-table th {
   border: 2px solid white; /* Match to the modalButton border */
   padding: 4px; /* Match to the modalButton padding */
   background: rgba(0, 0, 0, 0.1); /* Match to the modalButton background */
-}
-
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
 }

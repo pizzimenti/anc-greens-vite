@@ -7,7 +7,7 @@ import { getDisplayedColumns } from "./services/tableUtils";
 import Modal from 'react-modal';
 import PlantingTable from './components/PlantingTable';
 import ActivityModal from './components/ActivityModal';
-import { ClipLoader } from 'react-spinners'; // import the loading spinner
+import ClimbingBoxLoader from 'react-spinners/ClimbingBoxLoader'; // import the ClimbingBoxLoader instead of ClipLoader
 
 import "./App.css";
 
@@ -52,9 +52,9 @@ function App() {
         <h2>Plantings Data</h2>
       </div>
       {
-        isLoading ? // show spinner if loading
+        isLoading ? // show ClimbingBoxLoader if loading
         <div className="loader-container">
-          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
+          <ClimbingBoxLoader size={50} color={"#7FFF00"} />
         </div> : 
         Object.entries(categories).map(([column, title]) => {
           const filteredPlantings = checkIfPlantingHasTodayActivity(plantingsData, column as keyof Planting);
