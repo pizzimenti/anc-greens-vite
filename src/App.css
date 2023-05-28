@@ -1,22 +1,24 @@
 /* path: src/App.css */
 
 /* Styles for the main application container */
-/* This is where the overall app layout and global styles are defined */
 .App {
-  /* Centering the content */
-  text-align: center;  
-  /* Aligning items in the center */
-  display: flex;  
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; 
-  /* Full width and height */
-  width: 100vw;
+  /* Centering the content, text is centered both horizontally and vertically */
+  text-align: center;
+  /* Using flexbox for layout, this enables alignment and distribution of space within the container */
+  display: flex;
+  /* Stacking the children vertically */
+  flex-direction: column;
+  /* Horizontally align children in the middle */
+  align-items: center;
+  /* Vertically align children in the middle */
+  justify-content: center;
+  /* Setting the width to 100% and height to occupy the full viewport height */
+  width: 100%; 
   height: 100vh;
-  /* Setting the background color and text color */
+  /* Setting the background color and text color for the entire app */
   background-color: #1a431c;   
-  color: #ffffff;  
-  /* Setting the default font size and family */
+  color: #ffffff;
+  /* Setting the default font size and family for the app */
   font-size: calc(5px + 2vmin);
   font-family: Arial, sans-serif;
 }
@@ -24,9 +26,8 @@
 /* Styles for the logo */
 /* This controls the size and placement of the logo image */
 .logo {
-  width: 66.66vw;  
+  width: 100%;  
   max-width: 66%;
-  /* Centering the logo */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,28 +47,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Setting the width same as logo and placing it beneath the logo */
-  width: 66.66vw;
-  max-width: 66%;
+  width: 100%;
+  max-width: 100%;
   margin-top: 2em;
-}
-
-/* Styles for the spinner */
-/* This controls the size and color of the loading spinner */
-.react-spinners--clip-loader {
-  width: 100% !important;
-  height: auto !important;
-  /* Changing the spinner color to chartreuse */
-  border-color: #7FFF00 transparent transparent transparent !important; 
-  border-width: 4px !important;
 }
 
 /* Styles for the plantings table */
 /* This sets up the general layout and dimensions of the table */
 .plantings-table {
-  width: 100%;  
+  box-sizing: border-box; /* New property */
+  width: 100%;
   border-collapse: collapse;
   table-layout: fixed;   
+  padding: 1em; 
 }
 
 /* Styles for the table header cells and table data cells */
@@ -171,7 +163,7 @@
 /* Styles for the modal table */
 /* This styles the table that appears in the modal */
 .modal-table td, .modal-table th {
-  border: 2px solid white; /* Match to the modalButton border */
-  padding: 4px; /* Match to the modalButton padding */
-  background: rgba(0, 0, 0, 0.1); /* Match to the modalButton background */
+  border: 2px solid white; 
+  padding: 4px; 
+  background: rgba(0, 0, 0, 0.1); 
 }

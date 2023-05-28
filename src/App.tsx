@@ -7,7 +7,7 @@ import { getDisplayedColumns } from "./services/tableUtils";
 import Modal from 'react-modal';
 import PlantingTable from './components/PlantingTable';
 import ActivityModal from './components/ActivityModal';
-import ClimbingBoxLoader from 'react-spinners/ClimbingBoxLoader'; // import the ClimbingBoxLoader instead of ClipLoader
+import CircleLoader from 'react-spinners/CircleLoader'; // import the CircleLoader instead of ClimbingBoxLoader
 
 import "./App.css";
 
@@ -23,9 +23,14 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchPlantings();
-      setPlantingsData(data);
-      setIsLoading(false); // set loading to false after data is fetched
+      try {
+        const data = await fetchPlantings();
+        setPlantingsData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false); // set loading to false after data is fetched
+      }
     };
     fetchData();
   }, []);
@@ -52,9 +57,9 @@ function App() {
         <h2>Plantings Data</h2>
       </div>
       {
-        isLoading ? // show ClimbingBoxLoader if loading
+        isLoading ? // show CircleLoader if loading
         <div className="loader-container">
-          <ClimbingBoxLoader size={50} color={"#7FFF00"} />
+          <CircleLoader size={window.innerWidth/2} color={"#7FFF00"} />
         </div> : 
         Object.entries(categories).map(([column, title]) => {
           const filteredPlantings = checkIfPlantingHasTodayActivity(plantingsData, column as keyof Planting);
