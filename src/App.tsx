@@ -59,7 +59,7 @@ function App() {
       {
         isLoading ? // show CircleLoader if loading
         <div className="loader-container">
-          <CircleLoader size={window.innerWidth/2} color={"#7FFF00"} />
+          <CircleLoader size={80} color={"#7FFF00"} />
         </div> : 
         Object.entries(categories).map(([column, title]) => {
           const filteredPlantings = checkIfPlantingHasTodayActivity(plantingsData, column as keyof Planting);
@@ -68,7 +68,7 @@ function App() {
           const displayedColumns = getDisplayedColumns(filteredPlantings);
 
           return (
-            <PlantingTable key={column} title={title} plantings={filteredPlantings} headers={Array.from(displayedColumns)} handleCellClick={handleCellClick} displayedColumns={displayedColumns} />
+            <PlantingTable key={column} title={title} plantings={filteredPlantings} headers={Array.from(displayedColumns)} handleCellClick={handleCellClick} />
           );
         })
       }
