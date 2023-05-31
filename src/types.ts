@@ -62,3 +62,8 @@ export class PlantingData implements Planting {
     this.result = rowData[17];
   }
 }
+
+export interface FreeLocation {
+  bedLocation: string;
+  freeFloats: number;
+}

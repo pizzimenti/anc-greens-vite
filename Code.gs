@@ -1,11 +1,11 @@
-// Code.gs inside google apps script 1dCBjSIrpBkftuYYPqW6E-XPjhQOxFuOb9PM-fj30OmSIlTdc2mdGxCFv
+// Code.gs 
 
 const devSheetId = '1BYDrz5ez-0kDdU-hgM4p--Xj34cYt63tdiYDqa-eVLg';
 const prodSheetId = '14pwHH67iE2b3WfLrq_87W84TR_n0b3v-V13amfnmcR4';
 
 class Planting {
   constructor(rowData) {
-    this.planting = rowData[0];
+    this.plantingId = rowData[0];
     this.variety = rowData[1];
     this.number = rowData[2];
     this.seedsPerPlug = rowData[3];
@@ -27,8 +27,6 @@ class Planting {
 }
 
 let db = getAnchorageGreensDatabase();
-let today = new Date().toDateString();
-let freeLocations = getFreeLocations();
 
 function getAnchorageGreensDatabase() {
   const id = devSheetId;
@@ -53,49 +51,23 @@ function getPlantingsData() {
   return plantings;
 }
 
-function getDailyTasks(plantings) {
-  let dailyTasks = {
-    todaysHarvest: [],
-    t3: [],
-    t2: [],
-    t1: [],
-    tray: [],
-    seeding: []
-  };
-
-  const taskKeys = Object.keys(dailyTasks);
-
-  for (const planting of plantings) {
-    const taskDates = {
-      todaysHarvest: planting.harvestDate.toDateString(),
-      t3: planting.t3Date.toDateString(),
-      t2: planting.t2Date.toDateString(),
-      t1: planting.t1Date.toDateString(),
-      tray: planting.trayDate.toDateString(),
-      seeding: planting.seedDate.toDateString()
-    };
-
-    for (const taskKey of taskKeys) {
-      if (taskDates[taskKey] === today) {
-        dailyTasks[taskKey].push(planting);
-      }
-    }
-  }
-
-  return dailyTasks;
-}
-
 function doGet(e) {
-  if (e.parameter.type === 'dailyTasks') {
-    return doGetDailyTasks(e);
+  let output;
+  switch(e.parameter.type) {
+    case 'plantings':
+      const plantings = getPlantingsData();
+      const jsonPlantings = JSON.stringify(plantings.map(planting => Object.assign({}, planting)));
+      output = ContentService.createTextOutput(jsonPlantings);
+      output.setMimeType(ContentService.MimeType.JSON);
+      break;
+    case 'freeLocations':
+      const freeLocations = getFreeLocations();
+      const jsonFreeLocations = JSON.stringify(freeLocations);
+      output = ContentService.createTextOutput(jsonFreeLocations);
+      output.setMimeType(ContentService.MimeType.JSON);
+      break;
+    default:
+      output = ContentService.createTextOutput('Invalid type parameter');
   }
-
-  const plantings = getPlantingsData();
-  const json = JSON.stringify(plantings.map(planting => Object.assign({}, planting)));
-  
-  // Returning pure JSON response
-  const output = ContentService.createTextOutput(json);
-  output.setMimeType(ContentService.MimeType.JSON);
-  
   return output;
 }
