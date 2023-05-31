@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchPlantings } from "./services/api";
 import { Planting } from "./types";
-import logo from './logo.svg';
+import logo from './assets/logo.png';
 import { checkIfPlantingHasTodayActivity } from "./services/dataFilters";
 import { getDisplayedColumns } from "./services/tableUtils";
 import Modal from 'react-modal';
