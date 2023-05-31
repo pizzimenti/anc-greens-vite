@@ -62,11 +62,12 @@
 .plantings-table th,
 .plantings-table td {
   border: 1px solid #ffffff;  
-  padding: 8px;  
+  padding: 5px;  
   text-align: left;  
   overflow: hidden; 
   text-overflow: ellipsis; 
   white-space: nowrap; 
+  font-size: 1.7vw;
 }
 
 /* Styles for the table headers */

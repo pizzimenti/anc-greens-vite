@@ -12,6 +12,27 @@ type PlantingTableProps = {
     handleCellClick: (type: string, data: Planting) => void
 };
 
+const headerMappings: { [key: string]: string } = {
+    plantingId: 'Planting ID',
+    variety: 'Variety',
+    number: 'Number',
+    seedsPerPlug: 'Seeds per Plug',
+    seedDate: 'Seed Date',
+    seedAttributes: 'Seed Attributes',
+    actualSeedDate: 'Actual Seed Date',
+    trayDate: 'Tray Date',
+    actualTrayDate: 'Actual Tray Date',
+    t1Date: 'T1 Date',
+    t1Location: 'T1 Location',
+    t2Date: 'T2 Date',
+    t2Location: 'T2 Location',
+    t3Date: 'T3 Date',
+    t3Location: 'T3 Location',
+    harvestDate: 'Harvest Date',
+    harvestNotes: 'Harvest Notes',
+    result: 'Result',
+  };  
+
 const PlantingTable: React.FC<PlantingTableProps> = ({ title, plantings, headers, handleCellClick }) => {
     return (
         <div>
@@ -20,8 +41,8 @@ const PlantingTable: React.FC<PlantingTableProps> = ({ title, plantings, headers
                 <thead>
                     <tr>
                         {headers.map((header, index) => (
-                            <th key={index}>{header}</th>
-                        ))}
+      <th key={index}>{headerMappings[header]}</th>
+      ))}
                     </tr>
                 </thead>
                 <tbody>
