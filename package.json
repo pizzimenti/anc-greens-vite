@@ -9,10 +9,12 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "playwright test",
-    "test:watch": "playwright test --watch"
+    "test:watch": "playwright test --watch",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "date-fns": "^2.30.0",
+    "gh-pages": "^5.0.0",
     "npm-check-updates": "^16.10.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

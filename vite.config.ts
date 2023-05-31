@@ -9,4 +9,8 @@ export default defineConfig({
     open: true,
     host: '0.0.0.0', // It will be accessible from the network
   },
+  base: '/anc-greens-vite/', // add this line
+  build: {
+    outDir: 'dist'
+  },
 })

@@ -93,12 +93,9 @@ function doGet(e) {
   const plantings = getPlantingsData();
   const json = JSON.stringify(plantings.map(planting => Object.assign({}, planting)));
   
-  // Use JSONP to bypass CORS
-  const callback = e.parameter.callback;
-  const jsonp = `${callback}(${json});`;
-
-  const output = ContentService.createTextOutput(jsonp);
-  output.setMimeType(ContentService.MimeType.JAVASCRIPT);
+  // Returning pure JSON response
+  const output = ContentService.createTextOutput(json);
+  output.setMimeType(ContentService.MimeType.JSON);
   
   return output;
 }
