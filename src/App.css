@@ -145,8 +145,7 @@
 /* This styles the button that appears in the modal */
 .modalButton {
   background-color: #3c6e3e; 
-  color: white; 
-  border: none; 
+  color: white;
   padding: 10px 20px; 
   cursor: pointer;
   border: 2px solid white; 
@@ -154,6 +153,38 @@
   backdrop-filter: blur(5px);
   background: rgba(0, 0, 0, 0.2);
 }
+
+.bedButton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px;
+  justify-content: center; /* center the grid items horizontally */
+  align-items: center; /* center the grid items vertically */
+  margin-top: 20px; /* add top margin */
+  margin-bottom: 20px; /* add bottom margin */
+}
+
+
+.bedButton, .smallBedButton {
+  width: 100%; 
+  height: auto;
+  margin: 2px;
+  box-sizing: border-box; 
+}
+
+.bedButton {
+  padding: 16px; 
+  border-width: 4px; 
+  font-size: 1.2em; /* you can adjust the size as you see fit */
+}
+
+.smallBedButton {
+  padding: 8px;
+  border-width: 2px; 
+  font-size: 0.9em; /* smaller than the regular button but larger than before */
+}
+
+
 
 /* Styles for the modal table */
 /* This styles the table that appears in the modal */

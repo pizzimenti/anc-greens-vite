@@ -15,7 +15,7 @@ type ActivityModalProps = {
   categories: { [key: string]: string }
 };
 
-const ActivityModal: React.FC<ActivityModalProps> = ({modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories}) => {
+const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories }) => {
   const [beds, setBeds] = useState<Bed[]>([]);
   const [totalFreeFloats, setTotalFreeFloats] = useState<number>(0);
 
@@ -33,7 +33,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({modalIsOpen, setModalIsOpe
   }, [modalIsOpen]);
 
   // Rest of your code...
-  
+
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -65,14 +65,27 @@ const ActivityModal: React.FC<ActivityModalProps> = ({modalIsOpen, setModalIsOpe
               </tr>
             </tbody>
           </table>
-          <p>{JSON.stringify(modalData)}</p>
         </div>
       )}
-      {beds.map((bed, index) => (
-        <button key={index} className="modalButton">
-          {bed.location}
-        </button>
-      ))}
+
+      <div className="bedButton-grid">
+        {beds.map((bed, index) =>
+          [...Array(Math.floor(bed.freeFloats))].map((_, i) => (
+            <button key={`${index}-${i}`} className="bedButton modalButton">
+              {bed.location}
+            </button>
+          ))
+        )}
+        {beds.map((bed, index) =>
+          bed.freeFloats % 1 !== 0 ? (
+            <button key={`${index}-small`} className="smallBedButton modalButton">
+              {bed.location}
+            </button>
+          ) : null
+        )}
+      </div>
+
+
       <p>Total Free Floats: {totalFreeFloats}</p>
       <button onClick={() => {
         setModalIsOpen(false);
