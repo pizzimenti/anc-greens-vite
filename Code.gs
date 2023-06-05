@@ -26,6 +26,13 @@ class Planting {
   }
 }
 
+class Bed {
+  constructor(rowData) {
+    this.location = rowData[0];
+    this.freeFloats = parseFloat(rowData[1]); // make sure to parse the number as a float
+  }
+}
+
 let db = getAnchorageGreensDatabase();
 
 function getAnchorageGreensDatabase() {
@@ -34,13 +41,13 @@ function getAnchorageGreensDatabase() {
   return db;
 }
 
-function getFreeLocations() {
+function getBedsData() {
   const freeLocationsSheet = db.getSheetByName('free locations');
   const lastRow = freeLocationsSheet.getLastRow();
   const dataRange = freeLocationsSheet.getRange(1, 1, lastRow, 2);
-  const dataValues = dataRange.getValues();
-  const freeLocations = dataValues.filter(row => row[1] > 0).map(row => row[0]);
-  return freeLocations;
+  const rowData = dataRange.getValues();
+  const beds = rowData.map(row => new Bed(row));
+  return beds;
 }
 
 function getPlantingsData() {
@@ -60,10 +67,10 @@ function doGet(e) {
       output = ContentService.createTextOutput(jsonPlantings);
       output.setMimeType(ContentService.MimeType.JSON);
       break;
-    case 'freeLocations':
-      const freeLocations = getFreeLocations();
-      const jsonFreeLocations = JSON.stringify(freeLocations);
-      output = ContentService.createTextOutput(jsonFreeLocations);
+    case 'beds':
+      const beds = getBedsData();
+      const jsonBeds = JSON.stringify(beds.map(bed => Object.assign({}, bed)));
+      output = ContentService.createTextOutput(jsonBeds);
       output.setMimeType(ContentService.MimeType.JSON);
       break;
     default:

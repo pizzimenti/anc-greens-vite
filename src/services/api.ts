@@ -1,15 +1,17 @@
-import { Planting, FreeLocation } from '../types';
+// path: src/services/api.ts
 
-const API_URL = "https://script.google.com/macros/s/AKfycbz1-R4ykENzSx31Re3VWhUHxZQ3VWYQTV8MvbSQBbcedFYsbWUgzKlqZ9gDTjo7HTb1AA/exec";
+import { Planting, Bed } from '../types';
+
+const API_URL = "https://script.google.com/macros/s/AKfycbz5-Ix2MHZhCWTohuhL0afs3vmyy92ivMySfUOsiQtAF73L-lIHLfORIepYL3PD7eBATw/exec";
 
 export async function fetchPlantings(): Promise<Planting[]> {
   console.log('Fetching Plantings data');
   return fetchData<Planting>(API_URL, 'plantings');
 }
 
-export async function fetchFreeLocations(): Promise<FreeLocation[]> {
-  console.log('Fetching FreeLocations data');
-  return fetchData<FreeLocation>(API_URL, 'freeLocations');
+export async function fetchBeds(): Promise<Bed[]> {
+  console.log('Fetching Bed data');
+  return fetchData<Bed>(API_URL, 'beds');
 }
 
 async function fetchData<T>(url: string, type: string): Promise<T[]> {

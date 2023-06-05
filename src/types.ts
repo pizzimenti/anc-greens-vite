@@ -63,7 +63,7 @@ export class PlantingData implements Planting {
   }
 }
 
-export interface FreeLocation {
-  bedLocation: string;
+export interface Bed {
+  location: string;
   freeFloats: number;
 }

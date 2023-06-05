@@ -1,8 +1,9 @@
 // path: src/components/ActivityModal.tsx
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { Planting } from '../types';
+import { Planting, Bed } from '../types';
+import { fetchBeds } from '../services/api';  // make sure to replace fetchFreeLocations with fetchBeds
 
 type ActivityModalProps = {
   modalIsOpen: boolean,
@@ -15,6 +16,24 @@ type ActivityModalProps = {
 };
 
 const ActivityModal: React.FC<ActivityModalProps> = ({modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories}) => {
+  const [beds, setBeds] = useState<Bed[]>([]);
+  const [totalFreeFloats, setTotalFreeFloats] = useState<number>(0);
+
+  useEffect(() => {
+    if (modalIsOpen) {
+      const fetchLocations = async () => {
+        const locations = await fetchBeds();
+        console.log('Locations fetched:', locations);
+        setBeds(locations);
+        const total = locations.reduce((sum, bed) => sum + bed.freeFloats, 0);
+        setTotalFreeFloats(total);
+      }
+      fetchLocations();
+    }
+  }, [modalIsOpen]);
+
+  // Rest of your code...
+  
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -49,6 +68,12 @@ const ActivityModal: React.FC<ActivityModalProps> = ({modalIsOpen, setModalIsOpe
           <p>{JSON.stringify(modalData)}</p>
         </div>
       )}
+      {beds.map((bed, index) => (
+        <button key={index} className="modalButton">
+          {bed.location}
+        </button>
+      ))}
+      <p>Total Free Floats: {totalFreeFloats}</p>
       <button onClick={() => {
         setModalIsOpen(false);
         setModalType("");
