@@ -2,7 +2,7 @@
 
 import { Planting, Bed } from '../types';
 
-const API_URL = "https://script.google.com/macros/s/AKfycbz5-Ix2MHZhCWTohuhL0afs3vmyy92ivMySfUOsiQtAF73L-lIHLfORIepYL3PD7eBATw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwKEQ6eCqsJq_8A2FzRnVYUAQkKuiVIhckIgeC9j4_HWslJuedveUzcuaOlYHBC5LpBrw/exec";
 
 export async function fetchPlantings(): Promise<Planting[]> {
   console.log('Fetching Plantings data');

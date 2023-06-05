@@ -1,6 +1,6 @@
 // Code.gs 
 
-const devSheetId = '1BYDrz5ez-0kDdU-hgM4p--Xj34cYt63tdiYDqa-eVLg';
+const devSheetId = '1JOmdZZ7AqJLhhhFL-fe3vGWprAc4by7F1IzV1liP6IY';
 const prodSheetId = '14pwHH67iE2b3WfLrq_87W84TR_n0b3v-V13amfnmcR4';
 
 class Planting {
@@ -42,9 +42,9 @@ function getAnchorageGreensDatabase() {
 }
 
 function getBedsData() {
-  const freeLocationsSheet = db.getSheetByName('free locations');
-  const lastRow = freeLocationsSheet.getLastRow();
-  const dataRange = freeLocationsSheet.getRange(1, 1, lastRow, 2);
+  const bedsSheet = db.getSheetByName('beds');
+  const lastRow = bedsSheet.getLastRow();
+  const dataRange = bedsSheet.getRange(1, 1, lastRow, 2);
   const rowData = dataRange.getValues();
   const beds = rowData.map(row => new Bed(row));
   return beds;
