@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Planting, Bed } from '../types';
-import { fetchBeds } from '../services/api';  // make sure to replace fetchFreeLocations with fetchBeds
+import { fetchBeds } from '../services/api';
 
 type ActivityModalProps = {
   modalIsOpen: boolean,
@@ -27,12 +27,19 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         setBeds(locations);
         const total = locations.reduce((sum, bed) => sum + bed.freeFloats, 0);
         setTotalFreeFloats(total);
+        console.log('Modal type:', modalType);
       }
       fetchLocations();
     }
   }, [modalIsOpen]);
 
-  // Rest of your code...
+  const calculateRequiredFloats = () => {
+    if (modalData && ['t1', 't2', 't3'].includes(modalType)) {
+      const divider = modalType === 't1' ? 72 : modalType === 't2' ? 36 : 18;
+      return modalData.number / divider;
+    }
+    return 0;
+  }
 
   return (
     <Modal
@@ -85,8 +92,10 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         )}
       </div>
 
-
       <p>Total Free Floats: {totalFreeFloats}</p>
+      {['t1', 't2', 't3'].includes(modalType) &&
+        <p>Floats required: {calculateRequiredFloats()}</p>
+      }
       <button onClick={() => {
         setModalIsOpen(false);
         setModalType("");

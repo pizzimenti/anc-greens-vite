@@ -31,7 +31,7 @@ const headerMappings: { [key: string]: string } = {
     harvestDate: 'Harvest Date',
     harvestNotes: 'Harvest Notes',
     result: 'Result',
-  };  
+};
 
 const PlantingTable: React.FC<PlantingTableProps> = ({ title, plantings, headers, handleCellClick }) => {
     return (
@@ -41,8 +41,8 @@ const PlantingTable: React.FC<PlantingTableProps> = ({ title, plantings, headers
                 <thead>
                     <tr>
                         {headers.map((header, index) => (
-      <th key={index}>{headerMappings[header]}</th>
-      ))}
+                            <th key={index}>{headerMappings[header]}</th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
@@ -51,13 +51,19 @@ const PlantingTable: React.FC<PlantingTableProps> = ({ title, plantings, headers
                             <tr key={index}>
                                 {headers.map((header, headerIndex) => {
                                     const cellValue = planting[header as keyof Planting];
+                                    const handleClick = () => {
+                                        // remove 'Date' from the header before passing it to handleCellClick
+                                        const type = header.replace('Date', '');
+                                        handleCellClick(type, planting);
+                                    };
 
+                                    // rest of the code is same...
                                     if (typeof cellValue === "string" && !isNaN(Date.parse(cellValue))) {
                                         return (
                                             <td
                                                 key={headerIndex}
                                                 className={isToday(parseISO(cellValue)) ? 'highlighted' : ''}
-                                                onClick={() => handleCellClick(title, planting)}
+                                                onClick={handleClick}
                                             >
                                                 {formatDate(cellValue)}
                                             </td>
@@ -67,7 +73,7 @@ const PlantingTable: React.FC<PlantingTableProps> = ({ title, plantings, headers
                                             <td
                                                 key={headerIndex}
                                                 className={isToday(cellValue) ? 'highlighted' : ''}
-                                                onClick={() => handleCellClick(title, planting)}
+                                                onClick={handleClick}
                                             >
                                                 {formatDate(cellValue.toISOString())}
                                             </td>

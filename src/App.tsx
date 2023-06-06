@@ -58,27 +58,27 @@ function App() {
       </div>
       {
         isLoading ? // show CircleLoader if loading
-        <div className="loader-container">
-          <CircleLoader size={80} color={"#7FFF00"} />
-        </div> : 
-        Object.entries(categories).map(([column, title]) => {
-          const filteredPlantings = checkIfPlantingHasTodayActivity(plantingsData, column as keyof Planting);
-          if (filteredPlantings.length === 0) return null;
+          <div className="loader-container">
+            <CircleLoader size={80} color={"#7FFF00"} />
+          </div> :
+          Object.entries(categories).map(([column, title]) => {
+            const filteredPlantings = checkIfPlantingHasTodayActivity(plantingsData, column as keyof Planting);
+            if (filteredPlantings.length === 0) return null;
 
-          const displayedColumns = getDisplayedColumns(filteredPlantings);
+            const displayedColumns = getDisplayedColumns(filteredPlantings);
 
-          return (
-            <PlantingTable key={column} title={title} plantings={filteredPlantings} headers={Array.from(displayedColumns)} handleCellClick={handleCellClick} />
-          );
-        })
+            return (
+              <PlantingTable key={column} title={title} plantings={filteredPlantings} headers={Array.from(displayedColumns)} handleCellClick={handleCellClick} />
+            );
+          })
       }
-      <ActivityModal 
-        modalIsOpen={modalIsOpen} 
-        setModalIsOpen={setModalIsOpen} 
-        modalType={modalType} 
-        setModalType={setModalType} 
-        modalData={modalData} 
-        setModalData={setModalData} 
+      <ActivityModal
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+        modalType={modalType}
+        setModalType={setModalType}
+        modalData={modalData}
+        setModalData={setModalData}
         categories={categories}
       />
     </div>
