@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Planting, Bed } from '../types';
-import { fetchBeds } from '../services/api';
+import { fetchBeds, updatePlanting } from '../services/api';
 
 type ActivityModalProps = {
   modalIsOpen: boolean,
@@ -13,6 +13,7 @@ type ActivityModalProps = {
   modalData: Planting | null,
   setModalData: (data: Planting | null) => void,
   categories: { [key: string]: string }
+  refetchPlantings: () => Promise<void>
 };
 
 const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories }) => {
@@ -31,10 +32,16 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
   };
 
 
-  // Handle Button Click
   const handleButtonClick = () => {
     console.log(buttonAction[modalType]);
-    // TODO: implement the actual button action here.
+
+    if (modalType === "seed" && modalData) {
+      updatePlanting(modalData.plantingId, { actualSeedDate: new Date() })
+        .then(() => console.log("Planting updated"))
+        .catch(error => console.error("Failed to update planting", error));
+    }
+
+    // TODO: Add cases for other modalTypes as needed.
   };
 
   // Effects

@@ -44,6 +44,17 @@ function App() {
     harvestDate: "Today's Harvest"
   };
 
+  const refetchPlantings = async () => {
+    try {
+      const data = await fetchPlantings();
+      setPlantingsData(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleCellClick = (type: string, data: Planting) => {
     setModalType(type);
     setModalData(data);
@@ -80,6 +91,7 @@ function App() {
         modalData={modalData}
         setModalData={setModalData}
         categories={categories}
+        refetchPlantings={refetchPlantings}
       />
     </div>
   );

@@ -58,9 +58,26 @@ function getPlantingsData() {
   return plantings;
 }
 
+function updatePlantingData(plantingId, updatedData) {
+  const plantingsSheet = db.getSheetByName('plantings');
+  const dataRange = plantingsSheet.getDataRange();
+  const values = dataRange.getValues();
+
+  // Find the row of the planting we want to update
+  const rowIndex = values.findIndex(row => row[0] === plantingId);
+
+  if (rowIndex !== -1) {
+    // Update the "actual seed date" cell if we have a new date
+    if (updatedData.actualSeedDate) {
+      const date = new Date(updatedData.actualSeedDate);
+      plantingsSheet.getRange(rowIndex + 1, 7).setValue(date); // Here, 7 is the index of the "actual seed date" column (if it's the 7th column)
+    }
+  }
+}
+
 function doGet(e) {
   let output;
-  switch(e.parameter.type) {
+  switch (e.parameter.type) {
     case 'plantings':
       const plantings = getPlantingsData();
       const jsonPlantings = JSON.stringify(plantings.map(planting => Object.assign({}, planting)));
@@ -72,6 +89,15 @@ function doGet(e) {
       const jsonBeds = JSON.stringify(beds.map(bed => Object.assign({}, bed)));
       output = ContentService.createTextOutput(jsonBeds);
       output.setMimeType(ContentService.MimeType.JSON);
+      break;
+    case 'updatePlanting':
+      const plantingId = e.parameter.plantingId;
+      const updatedData = JSON.parse(e.parameter.updatedData);
+
+      console.log(`Updating planting ID ${plantingId} with data:`, updatedData); // New
+
+      updatePlantingData(plantingId, updatedData);
+      output = ContentService.createTextOutput('Planting updated');
       break;
     default:
       output = ContentService.createTextOutput('Invalid type parameter');
