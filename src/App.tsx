@@ -61,6 +61,22 @@ function App() {
     setModalIsOpen(true);
   }
 
+  const handleModalClose = () => {
+    refetchPlantings();
+  };
+
+  // Pass handleModalClose as a prop to ActivityModal
+  <ActivityModal
+    modalIsOpen={modalIsOpen}
+    setModalIsOpen={setModalIsOpen}
+    modalType={modalType}
+    setModalType={setModalType}
+    modalData={modalData}
+    setModalData={setModalData}
+    categories={categories}
+    refetchPlantings={refetchPlantings}
+  />
+
   return (
     <div className="App">
       <div className="header">

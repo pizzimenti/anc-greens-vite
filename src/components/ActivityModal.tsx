@@ -16,7 +16,7 @@ type ActivityModalProps = {
   refetchPlantings: () => Promise<void>
 };
 
-const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories }) => {
+const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories, refetchPlantings }) => {
   // State
   const [beds, setBeds] = useState<Bed[]>([]);
   const [totalFreeFloats, setTotalFreeFloats] = useState<number>(0);
@@ -37,7 +37,12 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
 
     if (modalType === "seed" && modalData) {
       updatePlanting(modalData.plantingId, { actualSeedDate: new Date() })
-        .then(() => console.log("Planting updated"))
+        .then(() => {
+          console.log("Planting updated");
+          // Close the dialog and refetch plantings
+          setModalIsOpen(false);
+          refetchPlantings();
+        })
         .catch(error => console.error("Failed to update planting", error));
     }
 
