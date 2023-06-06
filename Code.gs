@@ -69,8 +69,33 @@ function updatePlantingData(plantingId, updatedData) {
   if (rowIndex !== -1) {
     // Update the "actual seed date" cell if we have a new date
     if (updatedData.actualSeedDate) {
-      const date = new Date(updatedData.actualSeedDate);
-      plantingsSheet.getRange(rowIndex + 1, 7).setValue(date); // Here, 7 is the index of the "actual seed date" column (if it's the 7th column)
+      const seedDate = new Date(updatedData.actualSeedDate);
+      plantingsSheet.getRange(rowIndex + 1, 7).setValue(seedDate);
+    }
+
+    // Update the "actual tray date" cell if we have a new date
+    if (updatedData.actualTrayDate) {
+      const trayDate = new Date(updatedData.actualTrayDate);
+      plantingsSheet.getRange(rowIndex + 1, 9).setValue(trayDate);
+    }
+
+    // Update the "T1 date", "T2 date", "T3 date" cells if we have new dates
+    if (updatedData.actualT1Date) {
+      const t1Date = new Date(updatedData.actualT1Date);
+      plantingsSheet.getRange(rowIndex + 1, 11).setValue(t1Date);
+    }
+    if (updatedData.actualT2Date) {
+      const t2Date = new Date(updatedData.actualT2Date);
+      plantingsSheet.getRange(rowIndex + 1, 13).setValue(t2Date);
+    }
+    if (updatedData.actualT3Date) {
+      const t3Date = new Date(updatedData.actualT3Date);
+      plantingsSheet.getRange(rowIndex + 1, 15).setValue(t3Date);
+    }
+
+    // Update the "harvest" cell if we have a new string
+    if (updatedData.harvestNotes) {
+      plantingsSheet.getRange(rowIndex + 1, 17).setValue(updatedData.harvestNotes);
     }
   }
 }

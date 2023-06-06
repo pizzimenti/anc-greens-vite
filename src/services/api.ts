@@ -1,6 +1,8 @@
+// path: src/services/api.ts
+
 import { Planting, Bed } from '../types';
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbws3_vvXokbGuQEb6Vk0bEpiMsTBeobHSsoMBIfZrEqS6Z7ttPu9VNT_ekJG1fy4pJ0Yg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbygTe39x-0dxH6BciHZfbKt-O8I5DcwJY8JhQl14cf_RF0Y4nmC7hnUf5fQZDF0YTKyyw/exec';
 
 export async function fetchPlantings(): Promise<Planting[]> {
   console.log('Fetching Plantings data');
@@ -12,8 +14,16 @@ export async function fetchBeds(): Promise<Bed[]> {
   return fetchData<Bed>(API_URL, 'beds');
 }
 
-export async function updatePlanting(id: string, update: any) {
+export async function updatePlanting(id: string | undefined, update: Partial<Planting>) {
+  if (!id) {
+    throw new Error('Missing planting id');
+  }
+
   const url = `${API_URL}?type=updatePlanting&plantingId=${encodeURIComponent(id)}&updatedData=${encodeURIComponent(JSON.stringify(update))}`;
+
+  // Log the URL and the update data
+  console.log("Update URL: ", url);
+  console.log("Update data: ", update);
 
   const response = await fetch(url);
 

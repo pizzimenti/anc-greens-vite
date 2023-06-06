@@ -33,21 +33,37 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
 
 
   const handleButtonClick = () => {
-    console.log(buttonAction[modalType]);
+    let updateData: Partial<Planting> = {};
 
     if (modalType === "seed" && modalData) {
-      updatePlanting(modalData.plantingId, { actualSeedDate: new Date() })
+      updateData = { actualSeedDate: new Date() };
+    } else if (modalType === "tray" && modalData) {
+      updateData = { actualTrayDate: new Date() };
+    } // Add cases for other modalTypes as needed.
+    else if (modalType === "harvest" && modalData) {
+      updateData = { harvestNotes: "harvested" };
+    }
+
+    // Log the modalType and data to be updated
+    console.log("Modal type: ", modalType);
+    console.log("Data to update: ", updateData);
+
+    if (modalData?.plantingId) {
+      updatePlanting(modalData.plantingId, updateData)
         .then(() => {
-          console.log("Planting updated");
+          console.log(`Successfully updated planting with modalType: ${modalType}`);
           // Close the dialog and refetch plantings
           setModalIsOpen(false);
           refetchPlantings();
         })
-        .catch(error => console.error("Failed to update planting", error));
+        .catch(error => {
+          console.error(`Failed to update planting with modalType: ${modalType}`, error)
+        });
+    } else {
+      console.error('PlantingId is undefined');
     }
-
-    // TODO: Add cases for other modalTypes as needed.
   };
+
 
   // Effects
   useEffect(() => {
