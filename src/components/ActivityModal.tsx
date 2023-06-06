@@ -16,9 +16,28 @@ type ActivityModalProps = {
 };
 
 const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories }) => {
+  // State
   const [beds, setBeds] = useState<Bed[]>([]);
   const [totalFreeFloats, setTotalFreeFloats] = useState<number>(0);
 
+  // Button Action
+  const buttonAction: { [key: string]: string } = {
+    seed: "Mark Seeded",
+    tray: "Mark Trayed",
+    t1: "Mark Transplanted",
+    t2: "Mark Transplanted",
+    t3: "Mark Transplanted",
+    harvest: "Mark Harvested",
+  };
+
+
+  // Handle Button Click
+  const handleButtonClick = () => {
+    console.log(buttonAction[modalType]);
+    // TODO: implement the actual button action here.
+  };
+
+  // Effects
   useEffect(() => {
     if (modalIsOpen) {
       const fetchLocations = async () => {
@@ -33,6 +52,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
     }
   }, [modalIsOpen]);
 
+  // Helper function
   const calculateRequiredFloats = () => {
     if (modalData && ['t1', 't2', 't3'].includes(modalType)) {
       const divider = modalType === 't1' ? 72 : modalType === 't2' ? 36 : 18;
@@ -41,6 +61,10 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
     return 0;
   }
 
+  // Debugging
+  console.log("Modal type: ", modalType);
+
+  // Render
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -75,32 +99,41 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         </div>
       )}
 
-      <div className="bedButton-grid">
-        {beds.map((bed, index) =>
-          [...Array(Math.floor(bed.freeFloats))].map((_, i) => (
-            <button key={`${index}-${i}`} className="bedButton modalButton">
-              {bed.location}
-            </button>
-          ))
-        )}
-        {beds.map((bed, index) =>
-          bed.freeFloats % 1 !== 0 ? (
-            <button key={`${index}-small`} className="smallBedButton modalButton">
-              {bed.location}
-            </button>
-          ) : null
-        )}
-      </div>
+      {['t1', 't2', 't3'].includes(modalType) && (
+        <>
+          <div className="bedButton-grid">
+            {beds.map((bed, index) =>
+              [...Array(Math.floor(bed.freeFloats))].map((_, i) => (
+                <button key={`${index}-${i}`} className="bedButton modalButton">
+                  {bed.location}
+                </button>
+              ))
+            )}
+            {beds.map((bed, index) =>
+              bed.freeFloats % 1 !== 0 ? (
+                <button key={`${index}-small`} className="smallBedButton modalButton">
+                  {bed.location}
+                </button>
+              ) : null
+            )}
+          </div>
 
-      <p>Total Free Floats: {totalFreeFloats}</p>
-      {['t1', 't2', 't3'].includes(modalType) &&
-        <p>Floats required: {calculateRequiredFloats()}</p>
-      }
-      <button onClick={() => {
-        setModalIsOpen(false);
-        setModalType("");
-        setModalData(null);
-      }} className="modalButton">Close</button>
+          <div>
+            <p>Total Free Floats: {totalFreeFloats}</p>
+            {['t1', 't2', 't3'].includes(modalType) &&
+              <p>Floats required: {calculateRequiredFloats()}</p>
+            }
+          </div>
+        </>
+      )}
+
+
+
+      {modalType in buttonAction && (
+        <button onClick={handleButtonClick} className="modalButton fullWidthButton">
+          {buttonAction[modalType]}
+        </button>
+      )}
     </Modal>
   );
 }
