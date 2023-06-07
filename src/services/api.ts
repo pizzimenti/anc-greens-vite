@@ -2,7 +2,7 @@
 
 import { Planting, Bed } from '../types';
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbygTe39x-0dxH6BciHZfbKt-O8I5DcwJY8JhQl14cf_RF0Y4nmC7hnUf5fQZDF0YTKyyw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbz0VS2cx6k6LlqVgfDN2XHiuW_M1Taf8PVnefBPtcpL0tCuzhPwn4aWyD4IzvoiLv0JiQ/exec';
 
 export async function fetchPlantings(): Promise<Planting[]> {
   console.log('Fetching Plantings data');
@@ -29,6 +29,20 @@ export async function updatePlanting(id: string | undefined, update: Partial<Pla
 
   if (!response.ok) {
     throw new Error('Failed to update planting');
+  }
+}
+
+export async function updateBed(location: string, freeFloats: number) {
+  const url = `${API_URL}?type=updateBed&location=${encodeURIComponent(location)}&freeFloats=${encodeURIComponent(freeFloats.toString())}`;
+
+  // Log the URL and the freeFloats
+  console.log("Update URL: ", url);
+  console.log("Free Floats: ", freeFloats);
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('Failed to update bed');
   }
 }
 

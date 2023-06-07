@@ -79,18 +79,15 @@ function updatePlantingData(plantingId, updatedData) {
       plantingsSheet.getRange(rowIndex + 1, 9).setValue(trayDate);
     }
 
-    // Update the "T1 date", "T2 date", "T3 date" cells if we have new dates
-    if (updatedData.actualT1Date) {
-      const t1Date = new Date(updatedData.actualT1Date);
-      plantingsSheet.getRange(rowIndex + 1, 11).setValue(t1Date);
+    // Update the "T1 location", "T2 location", "T3 location" cells if we have new data
+    if (updatedData.t1Location) {
+      plantingsSheet.getRange(rowIndex + 1, 11).setValue(updatedData.t1Location);
     }
-    if (updatedData.actualT2Date) {
-      const t2Date = new Date(updatedData.actualT2Date);
-      plantingsSheet.getRange(rowIndex + 1, 13).setValue(t2Date);
+    if (updatedData.t2Location) {
+      plantingsSheet.getRange(rowIndex + 1, 13).setValue(updatedData.t2Location);
     }
-    if (updatedData.actualT3Date) {
-      const t3Date = new Date(updatedData.actualT3Date);
-      plantingsSheet.getRange(rowIndex + 1, 15).setValue(t3Date);
+    if (updatedData.t3Location) {
+      plantingsSheet.getRange(rowIndex + 1, 15).setValue(updatedData.t3Location);
     }
 
     // Update the "harvest" cell if we have a new string
@@ -119,7 +116,7 @@ function doGet(e) {
       const plantingId = e.parameter.plantingId;
       const updatedData = JSON.parse(e.parameter.updatedData);
 
-      console.log(`Updating planting ID ${plantingId} with data:`, updatedData); // New
+      Logger.log(`Updating planting ID ${plantingId} with data:`, updatedData);
 
       updatePlantingData(plantingId, updatedData);
       output = ContentService.createTextOutput('Planting updated');

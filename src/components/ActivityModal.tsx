@@ -1,3 +1,5 @@
+// path: src/components/ActivityModal.tsx
+
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Planting, Bed } from '../types';
@@ -19,8 +21,8 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
   const [beds, setBeds] = useState<Bed[]>([]);
   const [totalFreeFloats, setTotalFreeFloats] = useState<number>(0);
   const [selectedBeds, setSelectedBeds] = useState<{ [key: string]: boolean }>({});
+  const [locationNames, setLocationNames] = useState<{ [key: string]: string }>({});
 
-  // Button Action
   const buttonAction: { [key: string]: string } = {
     seed: "Mark Seeded",
     tray: "Mark Trayed",
@@ -30,7 +32,6 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
     harvest: "Mark Harvested",
   };
 
-
   const handleButtonClick = () => {
     let updateData: Partial<Planting> = {};
 
@@ -38,12 +39,19 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
       updateData = { actualSeedDate: new Date() };
     } else if (modalType === "tray" && modalData) {
       updateData = { actualTrayDate: new Date() };
-    } // Add cases for other modalTypes as needed.
-    else if (modalType === "harvest" && modalData) {
+    } else if (modalType === "harvest" && modalData) {
       updateData = { harvestNotes: "harvested" };
+    } else if (["t1", "t2", "t3"].includes(modalType) && modalData) {
+      const selectedKeys = Object.keys(selectedBeds).filter(key => selectedBeds[key]);
+      const selectedFloats = selectedKeys.reduce((acc, key) => acc + (key.includes('small') ? 0.5 : 1), 0);
+      if (selectedFloats < calculateRequiredFloats()) {
+        alert('You have not selected enough bed buttons.');
+        return;
+      }
+      const locationString = selectedKeys.map(key => locationNames[key]).join(', ');
+      updateData = { [`${modalType}Location`]: locationString };
     }
 
-    // Log the modalType and data to be updated
     console.log("Modal type: ", modalType);
     console.log("Data to update: ", updateData);
 
@@ -51,7 +59,6 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
       updatePlanting(modalData.plantingId, updateData)
         .then(() => {
           console.log(`Successfully updated planting with modalType: ${modalType}`);
-          // Close the dialog and refetch plantings
           setModalIsOpen(false);
           refetchPlantings();
         })
@@ -63,8 +70,6 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
     }
   };
 
-
-  // Effects
   useEffect(() => {
     if (modalIsOpen) {
       const fetchLocations = async () => {
@@ -74,12 +79,24 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         const total = locations.reduce((sum, bed) => sum + bed.freeFloats, 0);
         setTotalFreeFloats(total);
         console.log('Modal type:', modalType);
+
+        let newLocationNames: { [key: string]: string } = {};
+        locations.forEach((bed, index) => {
+          [...Array(Math.floor(bed.freeFloats))].forEach((_, i) => {
+            const key = `${index}-${i}`;
+            newLocationNames[key] = bed.location;
+          });
+          if (bed.freeFloats % 1 !== 0) {
+            const key = `${index}-small`;
+            newLocationNames[key] = bed.location;
+          }
+        });
+        setLocationNames(newLocationNames);
       }
       fetchLocations();
     }
   }, [modalIsOpen]);
 
-  // Helper function
   const calculateRequiredFloats = () => {
     if (modalData && ['t1', 't2', 't3'].includes(modalType)) {
       const divider = modalType === 't1' ? 72 : modalType === 't2' ? 36 : 18;
@@ -88,10 +105,8 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
     return 0;
   }
 
-  // Debugging
   console.log("Modal type: ", modalType);
 
-  // Render
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -164,20 +179,16 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
 
           <div>
             <p>Total Free Floats: {totalFreeFloats}</p>
-            {['t1', 't2', 't3'].includes(modalType) &&
-              <p>Floats required: {calculateRequiredFloats()}</p>
-            }
+            <p>Required Floats: {calculateRequiredFloats()}</p>
           </div>
         </>
       )}
 
-      {modalType in buttonAction && (
-        <button onClick={handleButtonClick} className="modalButton fullWidthButton">
-          {buttonAction[modalType]}
-        </button>
-      )}
+      <button className="modalButton" onClick={handleButtonClick}>
+        {modalType && buttonAction[modalType]}
+      </button>
     </Modal>
   );
-}
+};
 
 export default ActivityModal;
