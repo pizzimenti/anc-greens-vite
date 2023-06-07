@@ -172,6 +172,9 @@
   /* add bottom margin */
 }
 
+.selected {
+  background-color: #ffd00077;
+}
 
 .bedButton,
 .smallBedButton {
