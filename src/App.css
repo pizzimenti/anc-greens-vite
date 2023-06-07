@@ -159,15 +159,21 @@
 }
 
 /* Styles for the button in the modal when disabled */
-.modalButton.submitButtonDisabled {
+.modalButton.disabled {
   color: grey;
-  /* Text and border color when not selected */
   border-color: grey;
-  background-color: transparent;
+}
+
+.modalButton.submitButton {
+  width: calc(100% - 40px);
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
 }
 
 /* Styles for the button in the modal when enabled */
-.modalButton.submitButtonEnabled {
+.modalButton.enabled {
   color: white;
   /* Text and border color when selected */
   border-color: white;

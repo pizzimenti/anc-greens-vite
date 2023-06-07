@@ -1,5 +1,12 @@
 // path: src/components/ActivityModal.tsx
 
+// TODO:
+// 5. Correct Deactivated Submission Button Alert Messages
+// 4. Implement Loading Spinner After Button Press
+// 3. Adjust Bed Count When Item is Moved
+// 2. Hide Completed Rows
+// 1. Add Harvest Notes Text Field
+
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Planting, Bed } from '../types';
@@ -41,45 +48,57 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
       updateData = { actualTrayDate: new Date() };
     } else if (modalType === "harvest" && modalData) {
       updateData = { harvestNotes: "harvested" };
+
     } else if (["t1", "t2", "t3"].includes(modalType) && modalData) {
       const selectedKeys = Object.keys(selectedBeds).filter(key => selectedBeds[key]);
       const selectedFloats = selectedKeys.reduce((acc, key) => acc + (key.includes('small') ? 0.5 : 1), 0);
-      if (selectedFloats < calculateRequiredFloats()) {
-        alert('You have not selected enough bed buttons.');
+      const requiredFloats = calculateRequiredFloats();
+
+      if (selectedFloats < requiredFloats ||
+        (selectedFloats > requiredFloats && !(requiredFloats === 0.5 && selectedFloats === 1))) {
+        alert(selectedFloats < requiredFloats ? 'Too few floats selected for this transplant.' : 'Too many floats selected for this transplant.');
         return;
       }
+
       const locationString = selectedKeys.map(key => locationNames[key]).join(', ');
       updateData = { [`${modalType}Location`]: locationString };
     }
 
-    console.log("Modal type: ", modalType);
-    console.log("Data to update: ", updateData);
-
     if (modalData?.plantingId) {
       updatePlanting(modalData.plantingId, updateData)
         .then(() => {
-          console.log(`Successfully updated planting with modalType: ${modalType}`);
-          // After successful update of the planting, update each bed
-          if (["t1", "t2", "t3"].includes(modalType)) {
-            Object.keys(selectedBeds).forEach(key => {
-              const decrementAmount = key.includes('small') ? 0.5 : 1;
-              const bedId = beds[parseInt(key.split('-')[0])].location;
-              updateBedCount(bedId, decrementAmount);  // You'll need to implement this function on your backend
-            });
-          }
-          // Close the dialog and refetch plantings
-          setModalIsOpen(false);
-          refetchPlantings();
+          // Get a list of selected bed keys
+          const selectedKeys = Object.keys(selectedBeds).filter(key => selectedBeds[key]);
+          // Promise to update the bed count for all selected beds
+          const updateBedsPromises = selectedKeys.map(key => {
+            // Extract the bed index from the key
+            const bedIndex = Number(key.split('-')[0]);
+            // Determine how many floats to subtract
+            const floatsToSubtract = key.includes('small') ? 0.5 : 1;
+            // Get the new freeFloats count for the bed
+            const newFreeFloats = beds[bedIndex].freeFloats - floatsToSubtract;
+            // Call the API to update the bed
+            return updateBedCount(beds[bedIndex].location, newFreeFloats);
+          });
+          // Wait for all bed updates to finish
+          return Promise.all(updateBedsPromises);
         })
-        .catch(error => {
-          console.error(`Failed to update planting with modalType: ${modalType}`, error)
+        .then(() => {
+          // After updating all the beds, refetch the plantings
+          return refetchPlantings();
+        })
+        .then(() => {
+          // After refetching the plantings, close the modal
+          setModalIsOpen(false);
+        })
+        .catch((error) => {
+          console.error('Failed to update planting or bed', error);
         });
-    } else {
-      console.error('PlantingId is undefined');
     }
   };
 
   useEffect(() => {
+    setSelectedBeds({});
     if (modalIsOpen) {
       const fetchLocations = async () => {
         const locations = await fetchBeds();
@@ -119,10 +138,12 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
     return selectedKeys.reduce((acc, key) => acc + (key.includes('small') ? 0.5 : 1), 0);
   }
 
-  const isSubmitButtonEnabled = calculateSelectedFloats() >= calculateRequiredFloats();
-
-
-  console.log("Modal type: ", modalType);
+  const selectedFloats = calculateSelectedFloats();
+  const requiredFloats = calculateRequiredFloats();
+  const isSubmitButtonEnabled =
+    selectedFloats >= requiredFloats &&
+    (selectedFloats === requiredFloats ||
+      (requiredFloats === 0.5 && selectedFloats === 1));
 
   return (
     <Modal
@@ -131,7 +152,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         setModalIsOpen(false);
         setModalType("");
         setModalData(null);
-        setSelectedBeds({});  // Clear selected beds
+        setSelectedBeds({});  // reset selectedBeds when the modal closes
       }}
       contentLabel="Example Modal"
       className="content"
@@ -202,9 +223,14 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         </>
       )}
 
-      <button className={`modalButton ${isSubmitButtonEnabled ? 'submitButtonEnabled' : 'submitButtonDisabled'}`} onClick={handleButtonClick}>
+      <button
+        className={`modalButton ${isSubmitButtonEnabled ? 'submitButton enabled' : 'submitButton disabled'}`}
+        onClick={handleButtonClick}
+        disabled={!isSubmitButtonEnabled}
+      >
         {modalType && buttonAction[modalType]}
       </button>
+
     </Modal>
   );
 };
