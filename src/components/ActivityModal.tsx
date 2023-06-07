@@ -1,7 +1,6 @@
 // path: src/components/ActivityModal.tsx
 
 // TODO:
-// 5. Correct Deactivated Submission Button Alert Messages
 // 4. Implement Loading Spinner After Button Press
 // 3. Adjust Bed Count When Item is Moved
 // 2. Hide Completed Rows
