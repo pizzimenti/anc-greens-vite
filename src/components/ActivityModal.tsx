@@ -56,7 +56,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
 
       if (selectedFloats < requiredFloats ||
         (selectedFloats > requiredFloats && !(requiredFloats === 0.5 && selectedFloats === 1))) {
-        alert(selectedFloats < requiredFloats ? 'Too few floats selected for this transplant.' : 'Too many floats selected for this transplant.');
+          alert(selectedFloats < requiredFloats ? 'Too few floats selected for this transplant.' : 'Too many floats selected for this transplant.');
         return;
       }
 
@@ -226,7 +226,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
       <button
         className={`modalButton ${isSubmitButtonEnabled ? 'submitButton enabled' : 'submitButton disabled'}`}
         onClick={handleButtonClick}
-        disabled={!isSubmitButtonEnabled}
+        // disabled={!isSubmitButtonEnabled}
       >
         {modalType && buttonAction[modalType]}
       </button>
