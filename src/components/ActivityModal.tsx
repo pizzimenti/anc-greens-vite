@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Planting, Bed } from '../types';
-import { fetchBeds, updatePlanting } from '../services/api';
+import { fetchBeds, updatePlanting, updateBedCount } from '../services/api';
 
 type ActivityModalProps = {
   modalIsOpen: boolean,
@@ -59,6 +59,15 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
       updatePlanting(modalData.plantingId, updateData)
         .then(() => {
           console.log(`Successfully updated planting with modalType: ${modalType}`);
+          // After successful update of the planting, update each bed
+          if (["t1", "t2", "t3"].includes(modalType)) {
+            Object.keys(selectedBeds).forEach(key => {
+              const decrementAmount = key.includes('small') ? 0.5 : 1;
+              const bedId = beds[parseInt(key.split('-')[0])].location;
+              updateBedCount(bedId, decrementAmount);  // You'll need to implement this function on your backend
+            });
+          }
+          // Close the dialog and refetch plantings
           setModalIsOpen(false);
           refetchPlantings();
         })
@@ -104,6 +113,14 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
     }
     return 0;
   }
+
+  const calculateSelectedFloats = () => {
+    const selectedKeys = Object.keys(selectedBeds).filter(key => selectedBeds[key]);
+    return selectedKeys.reduce((acc, key) => acc + (key.includes('small') ? 0.5 : 1), 0);
+  }
+
+  const isSubmitButtonEnabled = calculateSelectedFloats() >= calculateRequiredFloats();
+
 
   console.log("Modal type: ", modalType);
 
@@ -180,11 +197,12 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
           <div>
             <p>Total Free Floats: {totalFreeFloats}</p>
             <p>Required Floats: {calculateRequiredFloats()}</p>
+            <p>Selected Floats: {calculateSelectedFloats()}</p>
           </div>
         </>
       )}
 
-      <button className="modalButton" onClick={handleButtonClick}>
+      <button className={`modalButton ${isSubmitButtonEnabled ? 'submitButtonEnabled' : 'submitButtonDisabled'}`} onClick={handleButtonClick}>
         {modalType && buttonAction[modalType]}
       </button>
     </Modal>

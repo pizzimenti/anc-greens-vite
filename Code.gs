@@ -58,6 +58,31 @@ function getPlantingsData() {
   return plantings;
 }
 
+function updateBedCountData(location, decrementAmount) {
+  const bedsSheet = db.getSheetByName('beds');
+  const dataRange = bedsSheet.getDataRange();
+  const values = dataRange.getValues();
+
+  // Find the row of the bed we want to update
+  const rowIndex = values.findIndex(row => row[0] === location);
+
+  Logger.log(`Location: ${location}`);
+  Logger.log(`Decrement Amount: ${decrementAmount}`);
+  Logger.log(`Row Index: ${rowIndex}`);
+
+  if (rowIndex !== -1) {
+    // Update the "freeFloats" cell
+    const currentFloats = parseFloat(values[rowIndex][1]);
+    Logger.log(`Current Floats: ${currentFloats}`);
+
+    const newFloats = currentFloats - decrementAmount;
+    Logger.log(`New Floats: ${newFloats}`);
+
+    bedsSheet.getRange(rowIndex + 1, 2).setValue(newFloats);
+  }
+}
+
+
 function updatePlantingData(plantingId, updatedData) {
   const plantingsSheet = db.getSheetByName('plantings');
   const dataRange = plantingsSheet.getDataRange();
@@ -120,6 +145,16 @@ function doGet(e) {
 
       updatePlantingData(plantingId, updatedData);
       output = ContentService.createTextOutput('Planting updated');
+      break;
+      output = ContentService.createTextOutput('Invalid type parameter');
+    case 'updateBedCount':
+      const location = e.parameter.location;
+      const decrementAmount = parseFloat(e.parameter.decrementAmount);
+
+      Logger.log(`Updating bed location ${location} by decrement amount:`, decrementAmount);
+
+      updateBedCountData(location, decrementAmount);
+      output = ContentService.createTextOutput('Bed count updated');
       break;
     default:
       output = ContentService.createTextOutput('Invalid type parameter');

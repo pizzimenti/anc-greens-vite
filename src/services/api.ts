@@ -2,7 +2,7 @@
 
 import { Planting, Bed } from '../types';
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbz0VS2cx6k6LlqVgfDN2XHiuW_M1Taf8PVnefBPtcpL0tCuzhPwn4aWyD4IzvoiLv0JiQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwRylKLrabfTTW48Tbryhi4VvUZsrqN3pbYi0DZL8wpuNPzltvqSE8HV3GJh8_GGbwBDg/exec';
 
 export async function fetchPlantings(): Promise<Planting[]> {
   console.log('Fetching Plantings data');
@@ -32,17 +32,17 @@ export async function updatePlanting(id: string | undefined, update: Partial<Pla
   }
 }
 
-export async function updateBed(location: string, freeFloats: number) {
-  const url = `${API_URL}?type=updateBed&location=${encodeURIComponent(location)}&freeFloats=${encodeURIComponent(freeFloats.toString())}`;
+export async function updateBedCount(location: string, decrementAmount: number) {
+  const url = `${API_URL}?type=updateBedCount&location=${encodeURIComponent(location)}&decrementAmount=${encodeURIComponent(decrementAmount.toString())}`;
 
-  // Log the URL and the freeFloats
+  // Log the URL and the decrementAmount
   console.log("Update URL: ", url);
-  console.log("Free Floats: ", freeFloats);
+  console.log("Decrement Amount: ", decrementAmount);
 
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error('Failed to update bed');
+    throw new Error('Failed to update bed count');
   }
 }
 

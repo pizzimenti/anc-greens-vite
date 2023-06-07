@@ -158,6 +158,23 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
+/* Styles for the button in the modal when disabled */
+.modalButton.submitButtonDisabled {
+  color: grey;
+  /* Text and border color when not selected */
+  border-color: grey;
+  background-color: transparent;
+}
+
+/* Styles for the button in the modal when enabled */
+.modalButton.submitButtonEnabled {
+  color: white;
+  /* Text and border color when selected */
+  border-color: white;
+  background-color: #ffd00077;
+  /* Background color when selected */
+}
+
 .bedButton-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
