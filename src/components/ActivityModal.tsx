@@ -1,5 +1,3 @@
-// path: src/components/ActivityModal.tsx
-
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Planting, Bed } from '../types';
@@ -12,14 +10,15 @@ type ActivityModalProps = {
   setModalType: (type: string) => void,
   modalData: Planting | null,
   setModalData: (data: Planting | null) => void,
-  categories: { [key: string]: string }
-  refetchPlantings: () => Promise<void>
+  categories: { [key: string]: string },
+  refetchPlantings: () => Promise<void>,
 };
 
 const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOpen, modalType, setModalType, modalData, setModalData, categories, refetchPlantings }) => {
   // State
   const [beds, setBeds] = useState<Bed[]>([]);
   const [totalFreeFloats, setTotalFreeFloats] = useState<number>(0);
+  const [selectedBeds, setSelectedBeds] = useState<{ [key: string]: boolean }>({});
 
   // Button Action
   const buttonAction: { [key: string]: string } = {
@@ -100,6 +99,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         setModalIsOpen(false);
         setModalType("");
         setModalData(null);
+        setSelectedBeds({});  // Clear selected beds
       }}
       contentLabel="Example Modal"
       className="content"
@@ -131,17 +131,33 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
         <>
           <div className="bedButton-grid">
             {beds.map((bed, index) =>
-              [...Array(Math.floor(bed.freeFloats))].map((_, i) => (
-                <button key={`${index}-${i}`} className="bedButton modalButton">
-                  {bed.location}
-                </button>
-              ))
+              [...Array(Math.floor(bed.freeFloats))].map((_, i) => {
+                const key = `${index}-${i}`;
+                return (
+                  <button
+                    key={key}
+                    className={`bedButton modalButton ${selectedBeds[key] ? 'selected' : ''}`}
+                    onClick={() => setSelectedBeds(prevState => ({ ...prevState, [key]: !prevState[key] }))}
+                  >
+                    {bed.location}
+                  </button>
+                );
+              })
             )}
             {beds.map((bed, index) =>
               bed.freeFloats % 1 !== 0 ? (
-                <button key={`${index}-small`} className="smallBedButton modalButton">
-                  {bed.location}
-                </button>
+                (() => {
+                  const key = `${index}-small`;
+                  return (
+                    <button
+                      key={key}
+                      className={`smallBedButton modalButton ${selectedBeds[key] ? 'selected' : ''}`}
+                      onClick={() => setSelectedBeds(prevState => ({ ...prevState, [key]: !prevState[key] }))}
+                    >
+                      {bed.location}
+                    </button>
+                  );
+                })()
               ) : null
             )}
           </div>
@@ -154,8 +170,6 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ modalIsOpen, setModalIsOp
           </div>
         </>
       )}
-
-
 
       {modalType in buttonAction && (
         <button onClick={handleButtonClick} className="modalButton fullWidthButton">
